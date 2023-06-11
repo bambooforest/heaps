@@ -14,6 +14,8 @@ knitr::opts_chunk$set(echo = TRUE, error=F, warning=F, message=F, cache=T)
 
 # Overview
 
+This file contains the supplementary materials for "How many speech sounds are there in the world's languages?".
+
 All code is written in the R the programming language [@R]. This report uses the following R libraries  [@tidyverse;@lmerTest;@testthat;@ggpubr].
 
 ```{r}
@@ -639,7 +641,7 @@ We now explore an alternative, generally more flexible estimator of type counts:
 
 The central equation for the Chao-Shen estimator is given below [@Chao_etal2009]. The central parameter for extrapolation is *r*, which expresses the number of additional "sampling units" (in our case, languages) we expect to encounter. 
 
-![Chao et al., 2009](figures/image.png)
+![Chao et al., 2009](image.png)
 
 The Chao-Shen estimator takes an **incidence matrix** as input. An incidence matrix is a record of the presence of absence of some type of thing in each of a set of sampling units. Imagine that you are looking to estimate the number of types of beetles in a forest. You set up a number of traps around the forest to get a (hopefully) representative sample of the overall ecosystem. The traps are the sampling units. The species of beetles are the types. You visit each trap, and for each species of beetle you find there, you record a 1 for that species in that trap. 
 

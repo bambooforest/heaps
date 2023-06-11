@@ -3,7 +3,7 @@ world’s languages?
 ================
 Steven Moran & Nicholas A. Lester
 
-06 June, 2023
+11 June, 2023
 
 - [Overview](#overview)
 - [Data](#data)
@@ -34,6 +34,9 @@ Steven Moran & Nicholas A. Lester
 - [References](#references)
 
 # Overview
+
+This file contains the supplementary materials for “How many speech
+sounds are there in the world’s languages?”.
 
 All code is written in the R the programming language (R Core Team
 2021). This report uses the following R libraries (Wickham et al. 2019;
@@ -389,12 +392,12 @@ zipf <- function(rank, a, b, c) {
 fitted <- nls(y ~ zipf(x_rank, a, b, c), data = df, start = list(a = -1.3, b = 18, c = 1000000), trace = T)
 ```
 
-    ## 17459.49 :  -1.3e+00  1.8e+01  1.0e+06
-    ## 23.82451 :  -1.874441e+00  2.336010e+01  1.358428e+06
-    ## 18.02847 :  -1.872725e+00  2.165292e+01  1.413320e+06
-    ## 18.02672 :  -1.873862e+00  2.181594e+01  1.425848e+06
-    ## 18.02671 :  -1.873775e+00  2.180571e+01  1.425032e+06
-    ## 18.02671 :  -1.873781e+00  2.180638e+01  1.425088e+06
+    ## 17323.09 :  -1.3e+00  1.8e+01  1.0e+06
+    ## 31.09966 :  -1.890554e+00  2.446032e+01  1.456656e+06
+    ## 18.37002 :  -1.889221e+00  2.248732e+01  1.561090e+06
+    ## 18.36039 :  -1.890456e+00  2.267069e+01  1.578628e+06
+    ## 18.36038 :  -1.890368e+00  2.266043e+01  1.577756e+06
+    ## 18.36038 :  -1.890374e+00  2.266103e+01  1.577812e+06
 
 ``` r
 # Plotting the Zipf's law with the parameters estimated
@@ -490,7 +493,7 @@ n <- sum(segments_phoible$Frequency)
 heaps(8, n, .5)
 ```
 
-    ## [1] 2598.055
+    ## [1] 2598.313
 
 An important feature of the Herdan-Heaps’ equation is that it can be
 expressed in the form of a standard linear equation. Simply take the
@@ -763,8 +766,8 @@ params
 
     ##         Database         B        K
     ## 1      UPSID-451 0.4994352 8.087208
-    ## 2 PHOIBLE (OIPL) 0.5252819 7.139261
-    ## 3  PHOIBLE (all) 0.5188244 7.790129
+    ## 2 PHOIBLE (OIPL) 0.5442040 5.870403
+    ## 3  PHOIBLE (all) 0.5179465 7.799643
 
 The values are relatively similar. Interestingly, UPSID-451 and PHOIBLE
 (all) have nearly identical values for *B*. They differ in the scalar
@@ -832,7 +835,7 @@ expresses the number of additional “sampling units” (in our case,
 languages) we expect to encounter.
 
 <figure>
-<img src="figures/image.png" alt="Chao et al., 2009" />
+<img src="image.png" alt="Chao et al., 2009" />
 <figcaption aria-hidden="true">Chao et al., 2009</figcaption>
 </figure>
 
@@ -1461,28 +1464,28 @@ ex.heaps.pho.2k
 ```
 
     ##    new.heaps heaps.mod diff.from.true.heaps diff.from.true.heaps.mod
-    ## 1   2747.849  2652.906            -146.8490                -51.90610
-    ## 2   2737.511  2642.926            -136.5113                -41.92554
-    ## 3   2730.884  2636.527            -129.8838                -35.52703
-    ## 4   2734.932  2640.435            -133.9321                -39.43545
-    ## 5   2747.623  2652.688            -146.6229                -51.68774
-    ## 6   2742.993  2648.218            -141.9931                -47.21795
-    ## 7   2734.333  2639.857            -133.3334                -38.85747
-    ## 8   2736.150  2641.611            -135.1497                -40.61102
-    ## 9   2725.547  2631.375            -124.5473                -30.37490
-    ## 10  2744.969  2650.126            -143.9693                -49.12583
+    ## 1   2688.463  2616.375            -92.46328              -20.3752130
+    ## 2   2695.604  2623.324            -99.60376              -27.3242264
+    ## 3   2675.301  2603.566            -79.30136               -7.5662085
+    ## 4   2668.526  2596.973            -72.52637               -0.9728906
+    ## 5   2679.184  2607.345            -83.18400              -11.3447409
+    ## 6   2675.588  2603.845            -79.58760               -7.8447794
+    ## 7   2706.093  2633.532           -110.09318              -37.5323859
+    ## 8   2689.237  2617.128            -93.23707              -21.1282549
+    ## 9   2686.813  2614.769            -90.81328              -18.7694537
+    ## 10  2694.222  2621.979            -98.22163              -25.9791533
 
 ``` r
 summary(ex.heaps.pho.2k)
 ```
 
     ##    new.heaps      heaps.mod    diff.from.true.heaps diff.from.true.heaps.mod
-    ##  Min.   :2726   Min.   :2631   Min.   :-146.8       Min.   :-51.91          
-    ##  1st Qu.:2734   1st Qu.:2640   1st Qu.:-143.5       1st Qu.:-48.65          
-    ##  Median :2737   Median :2642   Median :-135.8       Median :-41.27          
-    ##  Mean   :2738   Mean   :2644   Mean   :-137.3       Mean   :-42.67          
-    ##  3rd Qu.:2744   3rd Qu.:2650   3rd Qu.:-133.5       3rd Qu.:-39.00          
-    ##  Max.   :2748   Max.   :2653   Max.   :-124.5       Max.   :-30.37
+    ##  Min.   :2669   Min.   :2597   Min.   :-110.09      Min.   :-37.5324        
+    ##  1st Qu.:2676   1st Qu.:2605   1st Qu.: -96.98      1st Qu.:-24.7664        
+    ##  Median :2688   Median :2616   Median : -91.64      Median :-19.5723        
+    ##  Mean   :2686   Mean   :2614   Mean   : -89.90      Mean   :-17.8837        
+    ##  3rd Qu.:2693   3rd Qu.:2621   3rd Qu.: -80.49      3rd Qu.: -8.7198        
+    ##  Max.   :2706   Max.   :2634   Max.   : -72.53      Max.   : -0.9729
 
 And visualize the result.
 
@@ -1536,7 +1539,7 @@ heaps.2k.plot
 abs(true.val-mean.val)
 ```
 
-    ## [1] 42.6669
+    ## [1] 17.88373
 
 The 97.5% confidence intervals (CIs) are plotted around the estimate.
 The difference between the estimated and true values was ~18, indicating
@@ -1572,7 +1575,7 @@ chao.est.1k <- Extrapolate(vector, 1500, r)
 chao.est.1k
 ```
 
-    ## [1] 2745.727
+    ## [1] 2637.95
 
 As we saw before, the true value is 2596, which makes the difference in
 this estimate:
@@ -1583,7 +1586,7 @@ num.phons <- length(unique(phoible_long$Phoneme))
 abs(num.phons - chao.est.1k)
 ```
 
-    ## [1] 144.7273
+    ## [1] 41.94976
 
 The number of types is overestimated by ~41 phonemes, indicating worse
 performance than the HH model.
@@ -1641,7 +1644,7 @@ chao.2k.plot
 abs(mean.val-true.val)
 ```
 
-    ## [1] 13.52568
+    ## [1] 0.5604306
 
 Estimated and true values are given, along with .975 confidence
 interval.
@@ -1765,16 +1768,16 @@ ex.heaps.upsid.7k
 ```
 
     ##    new.heaps heaps.mod
-    ## 1   3986.680  3986.680
-    ## 2   3991.557  3991.557
-    ## 3   3984.458  3984.458
-    ## 4   3993.445  3993.445
-    ## 5   3991.662  3991.662
-    ## 6   3994.138  3994.138
-    ## 7   3979.127  3979.127
-    ## 8   3999.288  3999.288
-    ## 9   3992.678  3992.678
-    ## 10  3977.872  3977.872
+    ## 1   4003.804  4003.804
+    ## 2   4007.076  4007.076
+    ## 3   3999.811  3999.811
+    ## 4   3986.987  3986.987
+    ## 5   3993.888  3993.888
+    ## 6   3977.872  3977.872
+    ## 7   3996.259  3996.259
+    ## 8   4007.960  4007.960
+    ## 9   3989.749  3989.749
+    ## 10  3998.539  3998.539
 
 ``` r
 summary(ex.heaps.upsid.7k)
@@ -1782,11 +1785,11 @@ summary(ex.heaps.upsid.7k)
 
     ##    new.heaps      heaps.mod   
     ##  Min.   :3978   Min.   :3978  
-    ##  1st Qu.:3985   1st Qu.:3985  
-    ##  Median :3992   Median :3992  
-    ##  Mean   :3989   Mean   :3989  
-    ##  3rd Qu.:3993   3rd Qu.:3993  
-    ##  Max.   :3999   Max.   :3999
+    ##  1st Qu.:3991   1st Qu.:3991  
+    ##  Median :3997   Median :3997  
+    ##  Mean   :3996   Mean   :3996  
+    ##  3rd Qu.:4003   3rd Qu.:4003  
+    ##  Max.   :4008   Max.   :4008
 
 ``` r
 # UPSID
@@ -1797,28 +1800,28 @@ ex.heaps.upsid.10k
 ```
 
     ##    new.heaps heaps.mod
-    ## 1   4718.164  4718.164
-    ## 2   4725.222  4725.222
-    ## 3   4710.871  4710.871
-    ## 4   4724.902  4724.902
-    ## 5   4722.639  4722.639
-    ## 6   4713.126  4713.126
-    ## 7   4704.798  4704.798
-    ## 8   4722.428  4722.428
-    ## 9   4728.880  4728.880
-    ## 10  4706.289  4706.289
+    ## 1   4736.839  4736.839
+    ## 2   4734.446  4734.446
+    ## 3   4722.803  4722.803
+    ## 4   4718.710  4718.710
+    ## 5   4726.810  4726.810
+    ## 6   4708.512  4708.512
+    ## 7   4726.292  4726.292
+    ## 8   4727.606  4727.606
+    ## 9   4715.953  4715.953
+    ## 10  4726.837  4726.837
 
 ``` r
 summary(ex.heaps.upsid.10k)
 ```
 
     ##    new.heaps      heaps.mod   
-    ##  Min.   :4705   Min.   :4705  
-    ##  1st Qu.:4711   1st Qu.:4711  
-    ##  Median :4720   Median :4720  
-    ##  Mean   :4718   Mean   :4718  
-    ##  3rd Qu.:4724   3rd Qu.:4724  
-    ##  Max.   :4729   Max.   :4729
+    ##  Min.   :4709   Min.   :4709  
+    ##  1st Qu.:4720   1st Qu.:4720  
+    ##  Median :4727   Median :4727  
+    ##  Mean   :4724   Mean   :4724  
+    ##  3rd Qu.:4727   3rd Qu.:4727  
+    ##  Max.   :4737   Max.   :4737
 
 ``` r
 # 50k
@@ -1828,28 +1831,28 @@ ex.heaps.upsid.50k
 ```
 
     ##    new.heaps heaps.mod
-    ## 1   10541.24  10541.24
-    ## 2   10542.71  10542.71
-    ## 3   10539.77  10539.77
-    ## 4   10525.01  10525.01
-    ## 5   10535.19  10535.19
-    ## 6   10532.68  10532.68
-    ## 7   10538.97  10538.97
-    ## 8   10537.58  10537.58
-    ## 9   10527.77  10527.77
-    ## 10  10530.53  10530.53
+    ## 1   10574.81  10574.81
+    ## 2   10557.02  10557.02
+    ## 3   10547.75  10547.75
+    ## 4   10547.33  10547.33
+    ## 5   10556.43  10556.43
+    ## 6   10552.13  10552.13
+    ## 7   10571.67  10571.67
+    ## 8   10551.34  10551.34
+    ## 9   10548.03  10548.03
+    ## 10  10555.01  10555.01
 
 ``` r
 summary(ex.heaps.upsid.50k)
 ```
 
     ##    new.heaps       heaps.mod    
-    ##  Min.   :10525   Min.   :10525  
-    ##  1st Qu.:10531   1st Qu.:10531  
-    ##  Median :10536   Median :10536  
-    ##  Mean   :10535   Mean   :10535  
-    ##  3rd Qu.:10540   3rd Qu.:10540  
-    ##  Max.   :10543   Max.   :10543
+    ##  Min.   :10547   Min.   :10547  
+    ##  1st Qu.:10549   1st Qu.:10549  
+    ##  Median :10554   Median :10554  
+    ##  Mean   :10556   Mean   :10556  
+    ##  3rd Qu.:10557   3rd Qu.:10557  
+    ##  Max.   :10575   Max.   :10575
 
 ``` r
 # 100k
@@ -1859,28 +1862,28 @@ ex.heaps.upsid.100k
 ```
 
     ##    new.heaps heaps.mod
-    ## 1   14895.85  14895.85
-    ## 2   14891.09  14891.09
-    ## 3   14897.55  14897.55
-    ## 4   14881.67  14881.67
-    ## 5   14895.89  14895.89
-    ## 6   14882.51  14882.51
-    ## 7   14894.24  14894.24
-    ## 8   14898.89  14898.89
-    ## 9   14886.95  14886.95
-    ## 10  14905.82  14905.82
+    ## 1   14938.32  14938.32
+    ## 2   14928.15  14928.15
+    ## 3   14935.54  14935.54
+    ## 4   14922.41  14922.41
+    ## 5   14924.20  14924.20
+    ## 6   14918.91  14918.91
+    ## 7   14933.48  14933.48
+    ## 8   14926.59  14926.59
+    ## 9   14916.47  14916.47
+    ## 10  14934.10  14934.10
 
 ``` r
 summary(ex.heaps.upsid.100k)
 ```
 
     ##    new.heaps       heaps.mod    
-    ##  Min.   :14882   Min.   :14882  
-    ##  1st Qu.:14888   1st Qu.:14888  
-    ##  Median :14895   Median :14895  
-    ##  Mean   :14893   Mean   :14893  
-    ##  3rd Qu.:14897   3rd Qu.:14897  
-    ##  Max.   :14906   Max.   :14906
+    ##  Min.   :14916   Min.   :14916  
+    ##  1st Qu.:14923   1st Qu.:14923  
+    ##  Median :14927   Median :14927  
+    ##  Mean   :14928   Mean   :14928  
+    ##  3rd Qu.:14934   3rd Qu.:14934  
+    ##  Max.   :14938   Max.   :14938
 
 ``` r
 # PHOIBLE
@@ -1891,28 +1894,28 @@ ex.heaps.pho.7k
 ```
 
     ##    new.heaps heaps.mod
-    ## 1   4850.923  4885.384
-    ## 2   4857.164  4891.593
-    ## 3   4848.078  4882.555
-    ## 4   4859.580  4893.996
-    ## 5   4857.298  4891.726
-    ## 6   4860.468  4894.879
-    ## 7   4841.257  4875.769
-    ## 8   4867.059  4901.435
-    ## 9   4858.599  4893.020
-    ## 10  4839.651  4874.172
+    ## 1   5068.621  4859.882
+    ## 2   5073.135  4864.002
+    ## 3   5063.114  4854.857
+    ## 4   5045.428  4838.715
+    ## 5   5054.945  4847.401
+    ## 6   5032.860  4827.243
+    ## 7   5058.214  4850.385
+    ## 8   5074.355  4865.115
+    ## 9   5049.236  4842.191
+    ## 10  5061.359  4853.255
 
 ``` r
 summary(ex.heaps.pho.7k)
 ```
 
     ##    new.heaps      heaps.mod   
-    ##  Min.   :4840   Min.   :4874  
-    ##  1st Qu.:4849   1st Qu.:4883  
-    ##  Median :4857   Median :4892  
-    ##  Mean   :4854   Mean   :4888  
-    ##  3rd Qu.:4859   3rd Qu.:4894  
-    ##  Max.   :4867   Max.   :4901
+    ##  Min.   :5033   Min.   :4827  
+    ##  1st Qu.:5051   1st Qu.:4843  
+    ##  Median :5060   Median :4852  
+    ##  Mean   :5058   Mean   :4850  
+    ##  3rd Qu.:5067   3rd Qu.:4859  
+    ##  Max.   :5074   Max.   :4865
 
 ``` r
 # 10k
@@ -1922,28 +1925,28 @@ ex.heaps.pho.10k
 ```
 
     ##    new.heaps heaps.mod
-    ## 1   5791.250  5819.702
-    ## 2   5800.361  5828.746
-    ## 3   5781.834  5810.356
-    ## 4   5799.948  5828.335
-    ## 5   5797.026  5825.435
-    ## 6   5784.745  5813.245
-    ## 7   5773.995  5802.575
-    ## 8   5796.754  5825.165
-    ## 9   5805.084  5833.433
-    ## 10  5775.920  5804.486
+    ## 1   6087.665  5785.594
+    ## 2   6084.313  5782.562
+    ## 3   6068.011  5767.815
+    ## 4   6062.282  5762.632
+    ## 5   6073.621  5772.890
+    ## 6   6048.007  5749.717
+    ## 7   6072.896  5772.234
+    ## 8   6074.737  5773.899
+    ## 9   6058.422  5759.140
+    ## 10  6073.659  5772.924
 
 ``` r
 summary(ex.heaps.pho.10k)
 ```
 
     ##    new.heaps      heaps.mod   
-    ##  Min.   :5774   Min.   :5803  
-    ##  1st Qu.:5783   1st Qu.:5811  
-    ##  Median :5794   Median :5822  
-    ##  Mean   :5791   Mean   :5819  
-    ##  3rd Qu.:5799   3rd Qu.:5828  
-    ##  Max.   :5805   Max.   :5833
+    ##  Min.   :6048   Min.   :5750  
+    ##  1st Qu.:6064   1st Qu.:5764  
+    ##  Median :6073   Median :5773  
+    ##  Mean   :6070   Mean   :5770  
+    ##  3rd Qu.:6074   3rd Qu.:5774  
+    ##  Max.   :6088   Max.   :5786
 
 ``` r
 # 50k
@@ -1953,28 +1956,28 @@ ex.heaps.pho.50k
 ```
 
     ##    new.heaps heaps.mod
-    ## 1   13488.33  13414.45
-    ## 2   13490.32  13416.40
-    ## 3   13486.36  13412.51
-    ## 4   13466.49  13392.99
-    ## 5   13480.20  13406.46
-    ## 6   13476.82  13403.13
-    ## 7   13485.28  13411.45
-    ## 8   13483.41  13409.61
-    ## 9   13470.21  13396.64
-    ## 10  13473.92  13400.29
+    ## 1   14604.92  13306.36
+    ## 2   14578.16  13283.15
+    ## 3   14564.20  13271.05
+    ## 4   14563.58  13270.51
+    ## 5   14577.26  13282.38
+    ## 6   14570.80  13276.77
+    ## 7   14600.19  13302.26
+    ## 8   14569.61  13275.74
+    ## 9   14564.63  13271.42
+    ## 10  14575.13  13280.53
 
 ``` r
 summary(ex.heaps.pho.50k)
 ```
 
     ##    new.heaps       heaps.mod    
-    ##  Min.   :13466   Min.   :13393  
-    ##  1st Qu.:13475   1st Qu.:13401  
-    ##  Median :13482   Median :13408  
-    ##  Mean   :13480   Mean   :13406  
-    ##  3rd Qu.:13486   3rd Qu.:13412  
-    ##  Max.   :13490   Max.   :13416
+    ##  Min.   :14564   Min.   :13271  
+    ##  1st Qu.:14566   1st Qu.:13272  
+    ##  Median :14573   Median :13279  
+    ##  Mean   :14577   Mean   :13282  
+    ##  3rd Qu.:14578   3rd Qu.:13283  
+    ##  Max.   :14605   Max.   :13306
 
 ``` r
 # 100k
@@ -1984,28 +1987,28 @@ ex.heaps.pho.100k
 ```
 
     ##    new.heaps heaps.mod
-    ## 1   19404.57  19212.18
-    ## 2   19398.04  19205.80
-    ## 3   19406.89  19214.46
-    ## 4   19385.14  19193.18
-    ## 5   19404.62  19212.23
-    ## 6   19386.29  19194.31
-    ## 7   19402.36  19210.02
-    ## 8   19408.73  19216.26
-    ## 9   19392.36  19200.25
-    ## 10  19418.22  19225.54
+    ## 1   21280.26  19039.23
+    ## 2   21264.48  19025.79
+    ## 3   21275.95  19035.56
+    ## 4   21255.57  19018.21
+    ## 5   21258.35  19020.57
+    ## 6   21250.13  19013.57
+    ## 7   21272.75  19032.83
+    ## 8   21262.05  19023.72
+    ## 9   21246.35  19010.35
+    ## 10  21273.71  19033.65
 
 ``` r
 summary(ex.heaps.pho.100k)
 ```
 
     ##    new.heaps       heaps.mod    
-    ##  Min.   :19385   Min.   :19193  
-    ##  1st Qu.:19394   1st Qu.:19202  
-    ##  Median :19403   Median :19211  
-    ##  Mean   :19401   Mean   :19208  
-    ##  3rd Qu.:19406   3rd Qu.:19214  
-    ##  Max.   :19418   Max.   :19226
+    ##  Min.   :21246   Min.   :19010  
+    ##  1st Qu.:21256   1st Qu.:19019  
+    ##  Median :21263   Median :19025  
+    ##  Mean   :21264   Mean   :19025  
+    ##  3rd Qu.:21273   3rd Qu.:19033  
+    ##  Max.   :21280   Max.   :19039
 
 We can plot these distributions for comparison.
 
@@ -2091,7 +2094,7 @@ pho.mean.extrap
 ```
 
     ##   7151 langs  10000 langs  50000 langs 100000 langs 
-    ##     4888.453     5819.148    13406.394    19208.424
+    ##     4850.305     5769.941    13282.017    19025.348
 
 ``` r
 cat("\nUPSID\n")
@@ -2106,7 +2109,7 @@ ups.mean.extrap
 ```
 
     ##   7151 langs  10000 langs  50000 langs 100000 langs 
-    ##     3989.090     4717.732    10535.144    14893.046
+    ##     3996.195     4724.481    10556.152    14927.819
 
 ``` r
 cat("\nDifferences\n")
@@ -2122,7 +2125,7 @@ diff.extrap
 ```
 
     ##   7151 langs  10000 langs  50000 langs 100000 langs 
-    ##     899.3627    1101.4161    2871.2504    4315.3774
+    ##     854.1103    1045.4600    2725.8649    4097.5296
 
 The means confirm the visual impressions from the above plot. PHOIBLE
 produces higher estimates, and it grows at a faster rate than UPSID-451,
@@ -2190,22 +2193,22 @@ summary(mod.lmer) # near perfect fit
     ## Formula: SampleFrequency ~ InventoryCt + (1 | Iteration)
     ##    Data: sample.counts
     ## 
-    ## REML criterion at convergence: 30101.8
+    ## REML criterion at convergence: 29465.1
     ## 
     ## Scaled residuals: 
-    ##      Min       1Q   Median       3Q      Max 
-    ## -2.75690 -0.57874  0.06208  0.62116  3.06429 
+    ##     Min      1Q  Median      3Q     Max 
+    ## -3.2406 -0.5319 -0.0412  0.5715  3.1682 
     ## 
     ## Random effects:
     ##  Groups    Name        Variance Std.Dev.
     ##  Iteration (Intercept)     0      0.0   
-    ##  Residual              80375    283.5   
-    ## Number of obs: 2130, groups:  Iteration, 10
+    ##  Residual              72627    269.5   
+    ## Number of obs: 2100, groups:  Iteration, 10
     ## 
     ## Fixed effects:
     ##              Estimate Std. Error        df  t value Pr(>|t|)    
-    ## (Intercept) 3.779e+01  1.225e+01 2.128e+03    3.084  0.00207 ** 
-    ## InventoryCt 3.446e+01  9.990e-03 2.128e+03 3448.968  < 2e-16 ***
+    ## (Intercept) 4.178e+01  1.173e+01 2.098e+03    3.562 0.000376 ***
+    ## InventoryCt 3.462e+01  9.701e-03 2.098e+03 3568.869  < 2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -2226,19 +2229,19 @@ summary(mod.lm) # Still, nearly perfect.
     ## lm(formula = SampleFrequency ~ InventoryCt, data = sample.counts)
     ## 
     ## Residuals:
-    ##    Min     1Q Median     3Q    Max 
-    ## -781.6 -164.1   17.6  176.1  868.7 
+    ##     Min      1Q  Median      3Q     Max 
+    ## -873.32 -143.35  -11.11  154.01  853.82 
     ## 
     ## Coefficients:
-    ##             Estimate Std. Error  t value Pr(>|t|)    
-    ## (Intercept) 37.78770   12.25121    3.084  0.00207 ** 
-    ## InventoryCt 34.45678    0.00999 3448.968  < 2e-16 ***
+    ##              Estimate Std. Error  t value Pr(>|t|)    
+    ## (Intercept) 41.777760  11.728173    3.562 0.000376 ***
+    ## InventoryCt 34.621473   0.009701 3568.869  < 2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 283.5 on 2128 degrees of freedom
+    ## Residual standard error: 269.5 on 2098 degrees of freedom
     ## Multiple R-squared:  0.9998, Adjusted R-squared:  0.9998 
-    ## F-statistic: 1.19e+07 on 1 and 2128 DF,  p-value: < 2.2e-16
+    ## F-statistic: 1.274e+07 on 1 and 2098 DF,  p-value: < 2.2e-16
 
 The model fits are nearly perfect, but that makes sense. It means that
 most languages have a very similar number of segments to contribute.
@@ -2273,7 +2276,7 @@ c(n.2099, n.7k, n.10k, n.50k, n.100k)
 ```
 
     ##       2099       7151      10000      50000     100000 
-    ##   72362.57  246438.23  344605.59 1722876.82 3445715.85
+    ##   72712.25  247619.93  346256.50 1731115.41 3462189.04
 
 Finally, we can feed these values into our Herdan-Heaps’ estimator to
 get specific predictions for the expected number of phonemes given the
@@ -2288,7 +2291,7 @@ predictions
 ```
 
     ##   7151 langs  10000 langs  50000 langs 100000 langs 
-    ##     4885.335     5813.566    13398.788    19197.503
+    ##     4850.283     5770.142    13279.870    19015.534
 
 ``` r
 cat("\nDifferences\n")
@@ -2302,7 +2305,7 @@ predictions-pho.mean.extrap
 ```
 
     ##   7151 langs  10000 langs  50000 langs 100000 langs 
-    ##    -3.117881    -5.582085    -7.606190   -10.920572
+    ##  -0.02203594   0.20079049  -2.14671536  -9.81376464
 
 The PHOIBLE estimates are generally higher than those based on
 Approach 1. The differences are perhaps non-trivial (on the order of
@@ -2352,7 +2355,7 @@ chao.ext
 ```
 
     ##   7151 langs  10000 langs  50000 langs 100000 langs 
-    ##     4568.616     5015.962     5518.569     5518.635
+    ##     4592.070     5037.238     5530.864     5530.923
 
 ``` r
 cat("\nDifference from PHOIBLE (Approach 1)\n")
@@ -2366,7 +2369,7 @@ pho.mean.extrap-chao.ext
 ```
 
     ##   7151 langs  10000 langs  50000 langs 100000 langs 
-    ##     319.8367     803.1859    7887.8252   13689.7889
+    ##     258.2350     732.7032    7751.1528   13494.4250
 
 ``` r
 cat("\nDifference from PHOIBLE (Approach 2)\n")
@@ -2380,7 +2383,7 @@ predictions-chao.ext
 ```
 
     ##   7151 langs  10000 langs  50000 langs 100000 langs 
-    ##     316.7188     797.6039    7880.2190   13678.8683
+    ##      258.213      732.904     7749.006    13484.611
 
 ``` r
 cat("\nDifference from UPSID\n")
@@ -2394,7 +2397,7 @@ ups.mean.extrap-chao.ext
 ```
 
     ##   7151 langs  10000 langs  50000 langs 100000 langs 
-    ##    -579.5259    -298.2301    5016.5748    9374.4114
+    ##    -595.8753    -312.7568    5025.2879    9396.8954
 
 Plot these results
 
