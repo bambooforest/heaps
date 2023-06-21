@@ -3,7 +3,7 @@ world’s languages?
 ================
 Steven Moran & Nicholas A. Lester
 
-11 June, 2023
+21 June, 2023
 
 - [Overview](#overview)
 - [Data](#data)
@@ -34,9 +34,6 @@ Steven Moran & Nicholas A. Lester
 - [References](#references)
 
 # Overview
-
-This file contains the supplementary materials for “How many speech
-sounds are there in the world’s languages?”.
 
 All code is written in the R the programming language (R Core Team
 2021). This report uses the following R libraries (Wickham et al. 2019;
