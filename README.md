@@ -3,42 +3,15 @@ world’s languages?
 ================
 Steven Moran & Nicholas A. Lester
 
-21 June, 2023
+04 August, 2023
 
-- [Overview](#overview)
-- [Data](#data)
-- [Analyses](#analyses)
-  - [Zipf’s law](#zipfs-law)
-  - [Herdan-Heaps’ law](#herdan-heaps-law)
-    - [UPSID](#upsid)
-    - [PHOIBLE
-      (one-inventory-per-language)](#phoible-one-inventory-per-language)
-    - [PHOIBLE (all)](#phoible-all)
-    - [Comparing model parameters across
-      databases](#comparing-model-parameters-across-databases)
-  - [The Chao-Shen estimator](#the-chao-shen-estimator)
-    - [Relationship between Chao-Shen estimates and
-      *r*](#relationship-between-chao-shen-estimates-and-r)
-    - [Plotting error of Chao-Shen estimates in
-      PHOIBLE](#plotting-error-of-chao-shen-estimates-in-phoible)
-  - [Predicting known segment type diversity in
-    PHOIBLE](#predicting-known-segment-type-diversity-in-phoible)
-    - [Herdan-Heaps’ law](#herdan-heaps-law-1)
-    - [Chao-Shen estimator](#chao-shen-estimator)
-  - [Extrapolating estimates to unseen numbers of
-    observations](#extrapolating-estimates-to-unseen-numbers-of-observations)
-    - [Herdan-Heaps’ law](#herdan-heaps-law-2)
-    - [Chao-Shen estimator](#chao-shen-estimator-1)
-  - [Comparing Herdan-Heaps’ to Chao-Shen
-    estimator](#comparing-herdan-heaps-to-chao-shen-estimator)
-- [References](#references)
+# 1 Overview
 
-# Overview
-
-All code is written in the R the programming language (R Core Team
-2021). This report uses the following R libraries (Wickham et al. 2019;
-Kuznetsova, Brockhoff, and Christensen 2017; Wickham 2011; Kassambara
-2020).
+All code is written in the R the programming language ([R Core Team
+2021](#ref-R)). This report uses the following R libraries ([Wickham et
+al. 2019](#ref-tidyverse); [Kuznetsova, Brockhoff & Christensen
+2017](#ref-lmerTest); [Wickham 2011](#ref-testthat); [Kassambara
+2020](#ref-ggpubr)).
 
 ``` r
 # Load the libraries
@@ -51,24 +24,25 @@ library(ggpubr)
 This report is organized as follows:
 
 - First, we describe the data, which consists of two (nested) databases
-  of phonological inventories: UPSID (Maddieson 1984; Maddieson and
-  Precoda 1990) and PHOIBLE (Moran and McCloy 2019) – UPSID is included
-  in PHOIBLE.
+  of phonological inventories: UPSID ([Maddieson
+  1984](#ref-Maddieson1984); [Maddieson & Precoda
+  1990](#ref-MaddiesonPrecoda1990)) and PHOIBLE ([Moran & McCloy
+  2019](#ref-MoranMcCloy2019)) – UPSID is included in PHOIBLE.
 
 - Second, we show that both the UPSID and PHOIBLE databases’ segment
-  type distributions follow Zipf’s law (Zipf 1936, 1949). This step
-  helps us to motivate a connection to Herdan-Heaps’ law (described
-  next).
+  type distributions follow Zipf’s law ([Zipf 1936](#ref-Zipf1936);
+  [Zipf 1949](#ref-Zipf1949)). This step helps us to motivate a
+  connection to Herdan-Heaps’ law (described next).
 
 - Third, we evaluate the segment distributions in each database against
-  Herdan-Heaps’ law (Herdan 1964; Heaps 1978) (replacing the original
-  standard document count with language count, and word type count with
-  segment type count).
+  Herdan-Heaps’ law ([Herdan 1964](#ref-Herdan1964); [Heaps
+  1978](#ref-Heaps1978)) (replacing the original standard document count
+  with language count, and word type count with segment type count).
 
 - Fourth, we apply a different estimator of type counts, which we refer
-  to as the Chao-Shen estimator (Chao and Chiu 2016), which was
-  developed to estimate the richness of species from limited sample
-  sizes.
+  to as the Chao-Shen estimator ([Chao & Chiu 2016](#ref-ChaoChiu2016)),
+  which was developed to estimate the richness of species from limited
+  sample sizes.
 
 - Fifth, we check how each estimator performs when predicting our
   largest known sample (PHOIBLE) from subsets of languages.
@@ -83,14 +57,15 @@ This report is organized as follows:
   That is, ever increasing linguistic diversity leads to an ever
   increasing number of phonemes in light of linguistic laws.
 
-# Data
+# 2 Data
 
 For this study, we use the latest [PHOIBLE data](https://phoible.org)
-(Moran and McCloy 2019), which includes 3020 phonological inventories
-from 2186 distinct languages. The dataset is a convenience sample of
-languages, in which some geographic regions and language families have
-greater or lesser coverage. Included in PHOIBLE is UPSID-451 (Maddieson
-1984; Maddieson and Precoda 1990), a genealogically balanced sample of
+([Moran & McCloy 2019](#ref-MoranMcCloy2019)), which includes 3020
+phonological inventories from 2186 distinct languages. The dataset is a
+convenience sample of languages, in which some geographic regions and
+language families have greater or lesser coverage. Included in PHOIBLE
+is UPSID-451 ([Maddieson 1984](#ref-Maddieson1984); [Maddieson & Precoda
+1990](#ref-MaddiesonPrecoda1990)), a genealogically balanced sample of
 languages in which each data point was selected as a representative of
 its language family. We use both UPSID and PHOIBLE as baselines to
 evaluate our models.
@@ -137,8 +112,8 @@ having multiple inventories for a single language because whereas
 [Glottocodes](https://glottolog.org/glottolog/glottologinformation) in
 PHOIBLE provide detail on
 [doculects](https://phoible.org/faq#inventories-language-codes-doculects-and-sources)
-(Good and Cysouw 2013) and ISO 639-3 codes, the latter uniquely identify
-languages. Language code mappings are available
+([Good & Cysouw 2013](#ref-CysouwGood2013)) and ISO 639-3 codes, the
+latter uniquely identify languages. Language code mappings are available
 [online](https://github.com/phoible/dev/blob/master/mappings/InventoryID-LanguageCodes.csv).
 
 ``` r
@@ -212,7 +187,10 @@ upsid_cumulative <- get_cumulative_segment_counts_df(upsid_long)
 Plot it.
 
 ``` r
-qplot(id, results, data = upsid_cumulative, xlab="Number of languages (random order)", ylab="Cumulative number of segment types") + theme_bw()
+qplot(id, results, data = upsid_cumulative, 
+      xlab="Number of languages (random order)", 
+      ylab="Cumulative number of segment types") + 
+  theme_bw()
 ```
 
 ![](README_files/figure-gfm/cumulative_plot_upsid-1.png)<!-- -->
@@ -221,7 +199,10 @@ Now we plot the full PHOIBLE language sample. Note that the shape is
 similar, but the x-axis contains many more languages.
 
 ``` r
-qplot(id, results, data = phoible_cumulative, xlab="Number of languages (random order)", ylab="Cumulative number of segment types") + theme_bw()
+qplot(id, results, data = phoible_cumulative, 
+      xlab="Number of languages (random order)", 
+      ylab="Cumulative number of segment types") + 
+  theme_bw()
 ```
 
 ![](README_files/figure-gfm/cumulative_plot_phoible-1.png)<!-- -->
@@ -263,13 +244,13 @@ Herdan-Heaps’ law can be derived from the Mandelbrot distribution (of
 which Zipf is a special case). As a first step, we test whether the
 frequency of segments in our databases follows a Zipfian distribution.
 
-# Analyses
+# 3 Analyses
 
-## Zipf’s law
+## 3.1 Zipf’s law
 
 Some code in this selection is based on the
 [report](https://rstudio-pubs-static.s3.amazonaws.com/215309_736f5cc00eea4bb9be5a8c566da2beb6.html)
-by Bastrakova and Garcia (2016).
+by Bastrakova & Garcia ([2016](#ref-BastrakovaGarcia2016)).
 
 Does the segment distribution in the UPSID-451 and PHOIBLE sample of
 languages follow [Zipf’s
@@ -300,13 +281,19 @@ segments_phoible$Rank <- 1:nrow(segments_phoible)
 And we plot the segment type frequency distributions.
 
 ``` r
-plot(segments_upsid$Rank, segments_upsid$Frequency, xlab = "Rank", ylab = "Frequency", main = "UPSID-451 segment distribution")
+plot(segments_upsid$Rank, segments_upsid$Frequency, 
+     xlab = "Rank", 
+     ylab = "Frequency", 
+     main = "UPSID-451 segment distribution")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
-plot(segments_phoible$Rank, segments_phoible$Frequency, xlab = "Rank", ylab = "Frequency", main = "PHOIBLE phoneme distribution")
+plot(segments_phoible$Rank, segments_phoible$Frequency, 
+     xlab = "Rank", 
+     ylab = "Frequency", 
+     main = "PHOIBLE phoneme distribution")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
@@ -316,14 +303,20 @@ closely at the distribution.
 
 ``` r
 segments_gt_1_upsid <- segments_upsid %>% filter(Frequency > 1)
-plot(segments_gt_1_upsid$Rank, segments_gt_1_upsid$Frequency, xlab = "Rank", ylab = "Frequency", main = "UPSID segment distribution")
+plot(segments_gt_1_upsid$Rank, segments_gt_1_upsid$Frequency, 
+     xlab = "Rank", 
+     ylab = "Frequency", 
+     main = "UPSID segment distribution")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ``` r
 segments_gt_1_phoible <- segments_phoible %>% filter(Frequency > 1)
-plot(segments_gt_1_phoible$Rank, segments_gt_1_phoible$Frequency, xlab = "Rank", ylab = "Frequency", main = "PHOIBLE segment distribution")
+plot(segments_gt_1_phoible$Rank, segments_gt_1_phoible$Frequency, 
+     xlab = "Rank", 
+     ylab = "Frequency", 
+     main = "PHOIBLE segment distribution")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
@@ -347,8 +340,11 @@ zipf <- function(rank, a, b, c) {
 # Choosing the best parameters visually
 # lines(x, zipf(x_rank, -1.3, 18, 1000000), col = "green", lwd = 3)
 
-# Estimating the parameters -- TODO have set c lower
-fitted <- nls(y ~ zipf(x_rank, a, b, c), data = df, start = list(a = -1.3, b = 18, c = 100000), trace = T)
+# Estimating the parameters
+fitted <- nls(y ~ zipf(x_rank, a, b, c), 
+              data = df, 
+              start = list(a = -1.3, b = 18, c = 100000), 
+              trace = T)
 ```
 
     ## 3028.43 :      -1.3     18.0 100000.0
@@ -376,7 +372,10 @@ df <- data.frame(x, y)
 
 x_rank <- segments_gt_1_phoible$Rank
 
-plot(x, y, xlab = "Rank (log)", ylab = "Frequency (log)", main = "Zipf's law on PHOIBLE (OIPL)")
+plot(x, y, 
+     xlab = "Rank (log)", 
+     ylab = "Frequency (log)", 
+     main = "Zipf's law on PHOIBLE (OIPL)")
 
 zipf <- function(rank, a, b, c) {
   return(log(c) + a * log(rank + b))
@@ -386,7 +385,10 @@ zipf <- function(rank, a, b, c) {
 # lines(x, zipf(x_rank, -1.3, 18, 1000000), col = "green", lwd = 3)
 
 # Estimating the parameters
-fitted <- nls(y ~ zipf(x_rank, a, b, c), data = df, start = list(a = -1.3, b = 18, c = 1000000), trace = T)
+fitted <- nls(y ~ zipf(x_rank, a, b, c), 
+              data = df, 
+              start = list(a = -1.3, b = 18, c = 1000000), 
+              trace = T)
 ```
 
     ## 17323.09 :  -1.3e+00  1.8e+01  1.0e+06
@@ -412,7 +414,7 @@ Zipfian.
 
 We now test whether the distribution likewise follows Herdan-Heaps’ law.
 
-## Herdan-Heaps’ law
+## 3.2 Herdan-Heaps’ law
 
 What about the UPSID-451 and PHOIBLE segments and whether their
 distributions follows [Herdan–Heaps’
@@ -486,7 +488,10 @@ heaps <- function(K, n, B) {
 # Get the total number of observations from PHOIBLE
 n <- sum(segments_phoible$Frequency) 
 
-# Settings of K and B based on trial and error -- not the optimal values, but the result is reasonably close to the true value. Therefore, if we do any model tuning, the values we arrive at should be close to these; otherwise, we most likely have a bad fit of Herdan-Heaps' to the data. 
+# Settings of K and B based on trial and error -- not the optimal values, but 
+# the result is reasonably close to the true value. Therefore, if we do any 
+# model tuning, the values we arrive at should be close to these; otherwise, 
+# we most likely have a bad fit of Herdan-Heaps' to the data. 
 heaps(8, n, .5)
 ```
 
@@ -497,9 +502,12 @@ expressed in the form of a standard linear equation. Simply take the
 logarithm of each term:
 
 <br>
+
 <center>
+
 <span style="font-family:'Times New Roman'">log <i>d</i> = log
 <i>K</i> + <i>B</i>⋅ log <i>n</i></span>
+
 </center>
 
 </br>
@@ -507,9 +515,12 @@ logarithm of each term:
 which has the familiar form:
 
 <br>
+
 <center>
+
 <span style="font-family:'Times New Roman'"><i>y</i> =
 <i>Β</i><sub>0</sub> + <i>Β</i><sub>1</sub> ⋅ <i>x</i></span>
+
 </center>
 
 The upshot is that we can fit a (log-transformed) linear regression
@@ -569,14 +580,16 @@ heaps_results_upsid <- rand.heaps.data(upsid_long, 10)
 heaps_results_phoible <- rand.heaps.data(phoible_long, 10)
 ```
 
-### UPSID
+### 3.2.1 UPSID
 
 Now we fit linear regressions for UPSID-451 and PHOIBLE to generate
 (empirically) optimal values for *B* and *K* (our two free parameters in
 the Herdan-Heaps’ equation).
 
 ``` r
-fitHeaps.upsid <- lmer(log(type_count) ~ log(token_count) + (1|iteration), data = heaps_results_upsid)
+fitHeaps.upsid <- 
+  lmer(log(type_count) ~ log(token_count) + (1|iteration), 
+       data = heaps_results_upsid)
 
 logK.upsid <- fixef(fitHeaps.upsid)[1]
 B.upsid <- fixef(fitHeaps.upsid)[2]
@@ -618,13 +631,15 @@ heaps_upsid_p
 The UPSID model fits quite nicely, suggesting that the distribution
 follows Herdan-Heaps’ law.
 
-### PHOIBLE (one-inventory-per-language)
+### 3.2.2 PHOIBLE (one-inventory-per-language)
 
 Now for PHOIBLE, we begin with the “one-inventory-per-language” version
 of the database.
 
 ``` r
-fitHeaps.phoible <- lmer(log(type_count) ~ log(token_count) + (1|iteration), data = heaps_results_phoible)
+fitHeaps.phoible <- 
+  lmer(log(type_count) ~ log(token_count) + (1|iteration), 
+       data = heaps_results_phoible)
 
 logK.phoible<- fixef(fitHeaps.phoible)[1]
 B.phoible <- fixef(fitHeaps.phoible)[2]
@@ -667,7 +682,7 @@ Again, we find a very nice fit. Even though the observed cumulative
 distributions of UPSID-451 and PHOIBLE have different shapes, the
 Herdan-Heaps’ equation produces quality predictions for both.
 
-### PHOIBLE (all)
+### 3.2.3 PHOIBLE (all)
 
 Let’s try the same with the entirety of the PHOIBLE language sample,
 including multiple inventories for some languages.
@@ -704,7 +719,9 @@ Apply the Herdan-Heaps’ model.
 
 ``` r
 # Fit the model
-fitHeaps.phoible.all <- lmer(log(type_count) ~ log(token_count) + (1|iteration), data = heaps_results_phoible_all)
+fitHeaps.phoible.all <- 
+  lmer(log(type_count) ~ log(token_count) + (1|iteration), 
+       data = heaps_results_phoible_all)
 
 # Get the values for our parameters
 logK.phoible.all <- fixef(fitHeaps.phoible.all)[1]
@@ -747,7 +764,7 @@ heaps_phoible_all_p
 This plot replicates the other PHOIBLE-based plot, but on the entire
 dataset.
 
-### Comparing model parameters across databases
+### 3.2.4 Comparing model parameters across databases
 
 Let’s compare the parameter estimates across the databases.
 
@@ -820,19 +837,19 @@ heaps_comp_oipl
 ![](README_files/figure-gfm/compare_models-1.png)<!-- -->
 
 We now explore an alternative, generally more flexible estimator of type
-counts: the Chao-Shen estimator (Chao et al. 2009; Chao and Chiu 2016).
-If the results converge, then we have some foundation for trusting
-extrapolated values.
+counts: the Chao-Shen estimator ([Chao et al. 2009](#ref-Chao_etal2009);
+[Chao & Chiu 2016](#ref-ChaoChiu2016)). If the results converge, then we
+have some foundation for trusting extrapolated values.
 
-## The Chao-Shen estimator
+## 3.3 The Chao-Shen estimator
 
-The central equation for the Chao-Shen estimator is given below (Chao et
-al. 2009). The central parameter for extrapolation is *r*, which
-expresses the number of additional “sampling units” (in our case,
-languages) we expect to encounter.
+The central equation for the Chao-Shen estimator is given below ([Chao
+et al. 2009](#ref-Chao_etal2009)). The central parameter for
+extrapolation is *r*, which expresses the number of additional “sampling
+units” (in our case, languages) we expect to encounter.
 
 <figure>
-<img src="image.png" alt="Chao et al., 2009" />
+<img src="figures/image.png" alt="Chao et al., 2009" />
 <figcaption aria-hidden="true">Chao et al., 2009</figcaption>
 </figure>
 
@@ -856,7 +873,7 @@ from *R* languages:
 *Example incidence matrix for invented dataset*
 
 |               Phoneme                | Lang<sub>1</sub> | Lang<sub>2</sub> | ··· | Lang<sub>*R*</sub> | ∑<sub>phoneme</sub> |
-|:------------------------------------:|------------------|------------------|:---:|--------------------|---------------------|
+|:------------------------------------:|:-----------------|:-----------------|:---:|:-------------------|:--------------------|
 |         **Phon<sub>1</sub>**         | 1                | 0                | ··· | 0                  | 1                   |
 |         **Phon<sub>2</sub>**         | 0                | 1                | ··· | 1                  | 2                   |
 |                 ···                  | ···              | ···              | ··· | ···                | ···                 |
@@ -879,7 +896,8 @@ Note that Phon<sub>1</sub> appears only once in the sample; it is a
 is a **duplicate** (in the terminology of Gotelli and Chao, 2013). The
 total number of duplicate phonemes is ***Q*<sub>2</sub>**.
 
-Gotelli and Chao (2013) functions coded in R by Nicholas Lester:
+Gotelli & Chao ([2013](#ref-GotelliChao2013)) functions coded in R by
+Nicholas Lester:
 
 ``` r
 # args (hold the same for both equations)
@@ -901,7 +919,8 @@ Extrapolate <- function(vector, R, r) {
   }
 }
 
-# Function to estimate the number of unseen types from a proposed assemblage (used to compute our estimate of Q0)
+# Function to estimate the number of unseen types from a proposed assemblage 
+# (used to compute our estimate of Q0)
 S_Chao2 <- function(vector, R) {
   fd <- vector[vector > 0]
   Q1 <- sum(vector == 1)
@@ -926,7 +945,7 @@ refers to the number of additional **hypothetical** draws that we want
 to allow our estimator. The output is the expected number of types in
 the (fake) larger sample.
 
-### Relationship between Chao-Shen estimates and *r*
+### 3.3.1 Relationship between Chao-Shen estimates and *r*
 
 Here we examine how the Chao-Shen estimate grows in response to increase
 in *r* by:
@@ -1102,7 +1121,9 @@ choa.iter.plotter <- function(choa.df, mean.df, title){
 }
 
 # r = 10
-chao.iter.plot.10 <- choa.iter.plotter(chao.data.10.10, mean.obs.df.10, "r = 10") + ylim(0,4000)
+chao.iter.plot.10 <- 
+  choa.iter.plotter(chao.data.10.10, mean.obs.df.10, "r = 10") + 
+  ylim(0,4000)
 
 chao.iter.plot.10
 ```
@@ -1111,7 +1132,9 @@ chao.iter.plot.10
 
 ``` r
 # r = 50
-chao.iter.plot.50 <- choa.iter.plotter(chao.data.50.10, mean.obs.df.50, "r = 50") + ylim(0,4000)
+chao.iter.plot.50 <- 
+  choa.iter.plotter(chao.data.50.10, mean.obs.df.50, "r = 50") + 
+  ylim(0,4000)
 
 chao.iter.plot.50
 ```
@@ -1120,7 +1143,9 @@ chao.iter.plot.50
 
 ``` r
 # r = 100
-chao.iter.plot.100 <- choa.iter.plotter(chao.data.100.10, mean.obs.df.100, "r = 100") + ylim(0,4000)
+chao.iter.plot.100 <- 
+  choa.iter.plotter(chao.data.100.10, mean.obs.df.100, "r = 100") + 
+  ylim(0,4000)
 
 chao.iter.plot.100
 ```
@@ -1129,7 +1154,9 @@ chao.iter.plot.100
 
 ``` r
 # r = 500
-chao.iter.plot.500 <- choa.iter.plotter(chao.data.500.10, mean.obs.df.500, "r = 500") + ylim(0,4000)
+chao.iter.plot.500 <- 
+  choa.iter.plotter(chao.data.500.10, mean.obs.df.500, "r = 500") + 
+  ylim(0,4000)
 
 chao.iter.plot.500
 ```
@@ -1138,7 +1165,9 @@ chao.iter.plot.500
 
 ``` r
 # r = 1000
-chao.iter.plot.1000 <- choa.iter.plotter(chao.data.1000.10, mean.obs.df.1000, "r = 1000") + ylim(0,4000)
+chao.iter.plot.1000 <- 
+  choa.iter.plotter(chao.data.1000.10, mean.obs.df.1000, "r = 1000") + 
+  ylim(0,4000)
 
 chao.iter.plot.1000
 ```
@@ -1147,7 +1176,9 @@ chao.iter.plot.1000
 
 ``` r
 # r = 1500
-chao.iter.plot.1500 <- choa.iter.plotter(chao.data.1500.10, mean.obs.df.1500, "r = 1500") + ylim(0,4000)
+chao.iter.plot.1500 <- 
+  choa.iter.plotter(chao.data.1500.10, mean.obs.df.1500, "r = 1500") + 
+  ylim(0,4000)
 
 chao.iter.plot.1500
 ```
@@ -1156,7 +1187,10 @@ chao.iter.plot.1500
 
 ``` r
 # r = 2000
-chao.iter.plot.2000 <- choa.iter.plotter(chao.data.2000.10, mean.obs.df.2000, "r = 2000") + ylim(0,4000)
+chao.iter.plot.2000 <- 
+  choa.iter.plotter(chao.data.2000.10, mean.obs.df.2000, "r = 2000") + 
+  ylim(0,4000)
+
 chao.iter.plot.2000
 ```
 
@@ -1187,7 +1221,8 @@ increm.chao.plots <- ggarrange(chao.iter.plot.10 +
                                ncol=3,
                                nrow=3)
 
-annotate_figure(increm.chao.plots, bottom = "Number of languages (R)", left = "Estimated number of types")
+annotate_figure(increm.chao.plots, bottom = "Number of languages (R)", 
+                left = "Estimated number of types")
 ```
 
 ![](README_files/figure-gfm/chao_lang_types-1.png)<!-- -->
@@ -1226,7 +1261,7 @@ in *r* affect the degree of underestimation less.
 We can also plot the proximity of the estimates to the true values by
 substituting the difference between estimated and observed values.
 
-### Plotting error of Chao-Shen estimates in PHOIBLE
+### 3.3.2 Plotting error of Chao-Shen estimates in PHOIBLE
 
 ``` r
 # Function to plot differences between estimated and true values
@@ -1257,7 +1292,9 @@ diff.plotter <- function(df, mean.df, title){
     return(p)
 }
 
-chao.iter.diff.plot.10 <- diff.plotter(chao.data.10.10, mean.obs.df.10, "r=10") + ylim(-2500, 400)
+chao.iter.diff.plot.10 <- 
+  diff.plotter(chao.data.10.10, mean.obs.df.10, "r=10") + 
+  ylim(-2500, 400)
 
 chao.iter.diff.plot.10
 ```
@@ -1265,7 +1302,9 @@ chao.iter.diff.plot.10
 ![](README_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
 
 ``` r
-chao.iter.diff.plot.50 <- diff.plotter(chao.data.50.10, mean.obs.df.50,"r=50") + ylim(-2500, 400)
+chao.iter.diff.plot.50 <- 
+  diff.plotter(chao.data.50.10, mean.obs.df.50,"r=50") + 
+  ylim(-2500, 400)
 
 chao.iter.diff.plot.50
 ```
@@ -1273,7 +1312,9 @@ chao.iter.diff.plot.50
 ![](README_files/figure-gfm/unnamed-chunk-27-2.png)<!-- -->
 
 ``` r
-chao.iter.diff.plot.100 <- diff.plotter(chao.data.100.10, mean.obs.df.100,"r=100") + ylim(-2500, 400)
+chao.iter.diff.plot.100 <- 
+  diff.plotter(chao.data.100.10, mean.obs.df.100,"r=100") + 
+  ylim(-2500, 400)
 
 chao.iter.diff.plot.100
 ```
@@ -1281,7 +1322,9 @@ chao.iter.diff.plot.100
 ![](README_files/figure-gfm/unnamed-chunk-27-3.png)<!-- -->
 
 ``` r
-chao.iter.diff.plot.500 <- diff.plotter(chao.data.500.10, mean.obs.df.500,"r=500") + ylim(-2500, 400)
+chao.iter.diff.plot.500 <- 
+  diff.plotter(chao.data.500.10, mean.obs.df.500,"r=500") + 
+  ylim(-2500, 400)
 
 chao.iter.diff.plot.500
 ```
@@ -1289,7 +1332,9 @@ chao.iter.diff.plot.500
 ![](README_files/figure-gfm/unnamed-chunk-27-4.png)<!-- -->
 
 ``` r
-chao.iter.diff.plot.1000 <- diff.plotter(chao.data.1000.10, mean.obs.df.1000,"r=1000") + ylim(-2500, 400)
+chao.iter.diff.plot.1000 <- 
+  diff.plotter(chao.data.1000.10, mean.obs.df.1000,"r=1000") + 
+  ylim(-2500, 400)
 
 chao.iter.diff.plot.1000
 ```
@@ -1297,7 +1342,9 @@ chao.iter.diff.plot.1000
 ![](README_files/figure-gfm/unnamed-chunk-27-5.png)<!-- -->
 
 ``` r
-chao.iter.diff.plot.1500 <- diff.plotter(chao.data.1500.10, mean.obs.df.1500,"r=1500") + ylim(-2500, 400)
+chao.iter.diff.plot.1500 <- 
+  diff.plotter(chao.data.1500.10, mean.obs.df.1500,"r=1500") + 
+  ylim(-2500, 400)
 
 chao.iter.diff.plot.1500
 ```
@@ -1305,7 +1352,8 @@ chao.iter.diff.plot.1500
 ![](README_files/figure-gfm/unnamed-chunk-27-6.png)<!-- -->
 
 ``` r
-chao.iter.diff.plot.2000 <- diff.plotter(chao.data.2000.10, mean.obs.df.2000,"r=2000")
+chao.iter.diff.plot.2000 <- 
+  diff.plotter(chao.data.2000.10, mean.obs.df.2000,"r=2000")
 
 chao.iter.diff.plot.2000
 ```
@@ -1363,17 +1411,14 @@ closer to 0.42:1, at the least:
 
 <center>
 
-|                    |     |             |
-|-------------------:|:---:|:------------|
-|                *r* |  =  | 7151-2099   |
-|                    |  =  | 5052        |
-|                    |     |             |
-| *R*<sub>prop</sub> |  =  | 2099 / 5052 |
-|                    |  =  | 0.42        |
+|                    |     |                  |
+|-------------------:|:---:|:-----------------|
+|                *r* | = = | 7151-2099 5052   |
+| *R*<sub>prop</sub> | = = | 2099 / 5052 0.42 |
 
 </center>
 
-## Predicting known segment type diversity in PHOIBLE
+## 3.4 Predicting known segment type diversity in PHOIBLE
 
 We can now see how models trained on a smaller sample (e.g., 1500 random
 languages from PHOIBLE) perform in predicting the known value.
@@ -1382,7 +1427,7 @@ From PHOIBLE, we select a random 1500 languages – an arbitrary number
 that includes roughly half of the number of languages in the total
 sample.
 
-### Herdan-Heaps’ law
+### 3.4.1 Herdan-Heaps’ law
 
 First, we sample 1500 languages randomly from PHOIBLE.
 
@@ -1442,7 +1487,8 @@ Next, we fit the model.
 
 ``` r
 # Fit the model
-fitHeaps.phoible.rand.1k <- lmer(log(type_count) ~ log(token_count) + (1|iteration), data=rand.pho.1k.results)
+fitHeaps.phoible.rand.1k <- 
+  lmer(log(type_count) ~ log(token_count) + (1|iteration), data=rand.pho.1k.results)
 
 # Get the coefficients
 logK.phoible.1k <- fixef(fitHeaps.phoible.rand.1k)[1]
@@ -1542,7 +1588,7 @@ The 97.5% confidence intervals (CIs) are plotted around the estimate.
 The difference between the estimated and true values was ~18, indicating
 a slight overestimate.
 
-### Chao-Shen estimator
+### 3.4.2 Chao-Shen estimator
 
 Get a random sample.
 
@@ -1649,9 +1695,9 @@ interval.
 The Chao-Shen estimator produced a mean almost identical to the true
 number of phonemes.
 
-## Extrapolating estimates to unseen numbers of observations
+## 3.5 Extrapolating estimates to unseen numbers of observations
 
-### Herdan-Heaps’ law
+### 3.5.1 Herdan-Heaps’ law
 
 Above, we extracted estimates for the two free parameters in
 Herdan-Heaps’ equation by performing a (log) linear regression. These
@@ -1669,7 +1715,7 @@ population, so we cannot directly derive the requisite number of
 observations from the number of languages alone. Therefore, we need some
 way to estimate this figure.
 
-#### Estimating *n*
+#### 3.5.1.1 Estimating *n*
 
 We approach this problem in two ways.
 
@@ -1700,7 +1746,7 @@ as above):
 5.  Use the model to predict expected number of observations for any
     number of languages.
 
-##### Approach 1: Random resampling
+##### 3.5.1.1.1 Approach 1: Random resampling
 
 First, a function to extrapolate values.
 
@@ -2129,7 +2175,7 @@ produces higher estimates, and it grows at a faster rate than UPSID-451,
 as evidenced by the growth in the size for the differences between the
 estimates as a function of sample size.
 
-##### Approach 2: Regression modeling
+##### 3.5.1.1.2 Approach 2: Regression modeling
 
 Here we explore an additional way to estimate sample size. We create a
 model to predict number of observations from the number of languages.
@@ -2311,7 +2357,7 @@ sample size. This suggests that our randomly resampling technique
 (Approach 1) produces estimates that grow at a slower pace than the
 linear model would predict.
 
-### Chao-Shen estimator
+### 3.5.2 Chao-Shen estimator
 
 Prepare the data.
 
@@ -2331,7 +2377,7 @@ r.50k <- 50000 - length(unique(phoible_long$InventoryID))
 r.100k <- 100000 - length(unique(phoible_long$InventoryID))
 ```
 
-#### Chao-Shen extrapolation
+#### 3.5.2.1 Chao-Shen extrapolation
 
 Results from PHOIBLE (2099 distinct languages) for *r* = {7151, 10k,
 50k, 100k}.
@@ -2399,9 +2445,14 @@ ups.mean.extrap-chao.ext
 Plot these results
 
 ``` r
-plot.diff.dat <- data.frame(Type.ct.est = c(pho.mean.extrap, predictions, chao.ext), Estimator = factor(rep(c("HH Approach 1", "HH Approach 2", "Chao-Shen"), each = 4)), Sample.Size = factor(rep(c("7151", "10K", "50K", "100K"), 3)))
+plot.diff.dat <- 
+  data.frame(Type.ct.est = c(pho.mean.extrap, predictions, chao.ext), 
+             Estimator = factor(rep(c("HH Approach 1", "HH Approach 2", "Chao-Shen"), each = 4)), 
+             Sample.Size = factor(rep(c("7151", "10K", "50K", "100K"), 3)))
 
-plot.diff.dat$Sample.Size = factor(plot.diff.dat$Sample.Size, levels = levels(plot.diff.dat$Sample.Size)[c(4, 2, 3, 1)])
+plot.diff.dat$Sample.Size = 
+  factor(plot.diff.dat$Sample.Size, 
+         levels = levels(plot.diff.dat$Sample.Size)[c(4, 2, 3, 1)])
 
 p = ggplot(plot.diff.dat, aes(y = Type.ct.est, x = Estimator, fill = Sample.Size), group = Estimator) +
     geom_bar(stat="identity", position="dodge") + 
@@ -2427,7 +2478,7 @@ hypothetical sample size.
 Given the difference in results, we now compare the two estimators on
 known data, i.e., PHOIBLE.
 
-## Comparing Herdan-Heaps’ to Chao-Shen estimator
+## 3.6 Comparing Herdan-Heaps’ to Chao-Shen estimator
 
 We can compare the iterative performance of the Chao-Shen estimator to
 that of Herdan-Heaps’ estimator.
@@ -2508,121 +2559,120 @@ and describing the phonological systems of more and more languages. In
 other words, infinite linguistic diversity seems to breed infinite
 possible phonemes.
 
-# References
+# 4 References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
 <div id="ref-BastrakovaGarcia2016" class="csl-entry">
 
-Bastrakova, Ekaterina, and Saul Garcia. 2016. “Zipf’s and Heap’s Law.”
-Online:
+Bastrakova, Ekaterina & Saul Garcia. 2016. Zipf’s and
+<span class="nocase">Heap’s</span> law. Online:
 <https://rstudio-pubs-static.s3.amazonaws.com/215309_736f5cc00eea4bb9be5a8c566da2beb6.html>.
 
 </div>
 
 <div id="ref-ChaoChiu2016" class="csl-entry">
 
-Chao, Anne, and Chun-Huo Chiu. 2016. “Species Richness: Estimation and
-Comparison.” In *Wiley StatsRef: Statistics Reference Online*, 1–26.
-John Wiley & Son.
+Chao, Anne & Chun-Huo Chiu. 2016. Species richness: Estimation and
+comparison. In *Wiley StatsRef: Statistics Reference Online*, 1–26. John
+Wiley & Sons.
 
 </div>
 
 <div id="ref-Chao_etal2009" class="csl-entry">
 
-Chao, Anne, Robert K Colwell, Chih-Wei Lin, and Nicholas J Gotelli.
-2009. “Sufficient Sampling for Asymptotic Minimum Species Richness
-Estimators.” *Ecology* 90 (4): 1125–33.
+Chao, Anne, Robert K Colwell, Chih-Wei Lin & Nicholas J Gotelli. 2009.
+Sufficient sampling for asymptotic minimum species richness estimators.
+*Ecology*. Wiley Online Library 90(4). 1125–1133.
 
 </div>
 
 <div id="ref-CysouwGood2013" class="csl-entry">
 
-Good, Jeff, and Michael Cysouw. 2013. “Languoid, Doculect, and
-Glossonym: Formalizing the Notion ‘Language’.” *Language Documentation &
-Conservation* 7: 331–60.
+Good, Jeff & Michael Cysouw. 2013. Languoid, doculect, and glossonym:
+Formalizing the notion “language.” *Language Documentation &
+Conservation* 7. 331–360.
 
 </div>
 
 <div id="ref-GotelliChao2013" class="csl-entry">
 
-Gotelli, Nicholas J, and Anne Chao. 2013. “Measuring and Estimating
-Species Richness, Species Diversity, and Biotic Similarity from Sampling
-Data.” In *Encyclopedia of Biodiversity*, edited by Simon A Levin,
-195–211. Elsevier.
+Gotelli, Nicholas J & Anne Chao. 2013. Measuring and estimating species
+richness, species diversity, and biotic similarity from sampling data.
+In Simon A Levin (ed.), *Encyclopedia of biodiversity*, 195–211.
+Elsevier.
 
 </div>
 
 <div id="ref-Heaps1978" class="csl-entry">
 
-Heaps, Harold Stanley. 1978. *Information Retrieval, Computational and
-Theoretical Aspects*. Academic Press.
+Heaps, Harold Stanley. 1978. *Information retrieval, computational and
+theoretical aspects*. Academic Press.
 
 </div>
 
 <div id="ref-Herdan1964" class="csl-entry">
 
-Herdan, Gustav. 1964. “Quantitative Linguistics.”
+Herdan, Gustav. 1964. *Quantitative linguistics*. London: Butterworth.
 
 </div>
 
 <div id="ref-ggpubr" class="csl-entry">
 
-Kassambara, Alboukadel. 2020. *Ggpubr: ’Ggplot2’ Based Publication Ready
-Plots*.
+Kassambara, Alboukadel. 2020. *Ggpubr: “ggplot2” based publication ready
+plots*.
 
 </div>
 
 <div id="ref-lmerTest" class="csl-entry">
 
-Kuznetsova, Alexandra, Per B. Brockhoff, and Rune H. B. Christensen.
-2017. “<span class="nocase">lmerTest</span> Package: Tests in Linear
-Mixed Effects Models.” *Journal of Statistical Software* 82 (13): 1–26.
+Kuznetsova, Alexandra, Per B. Brockhoff & Rune H. B. Christensen. 2017.
+<span class="nocase">lmerTest</span> package: Tests in linear mixed
+effects models. *Journal of Statistical Software* 82(13). 1–26.
 
 </div>
 
 <div id="ref-Maddieson1984" class="csl-entry">
 
-Maddieson, Ian. 1984. *Patterns of Sounds*. Cambridge: Cambridge
+Maddieson, Ian. 1984. *Patterns of sounds*. Cambridge: Cambridge
 University Press.
 
 </div>
 
 <div id="ref-MaddiesonPrecoda1990" class="csl-entry">
 
-Maddieson, Ian, and Kristin Precoda. 1990. “Updating UPSID.” In *UCLA
-Working Papers in Phonetics*, 74:104–11. Department of Linguistics,
-UCLA.
+Maddieson, Ian & Kristin Precoda. 1990. Updating UPSID. In *UCLA working
+papers in phonetics*, vol. 74, 104–111. Department of Linguistics, UCLA.
 
 </div>
 
 <div id="ref-MoranMcCloy2019" class="csl-entry">
 
-Moran, Steven, and Daniel McCloy, eds. 2019. *PHOIBLE 2.0*. Jena: Max
+Moran, Steven & Daniel McCloy (eds.). 2019. *PHOIBLE 2.0*. Jena: Max
 Planck Institute for the Science of Human History.
 
 </div>
 
 <div id="ref-Naumann2013" class="csl-entry">
 
-Naumann, Christfried. 2013. “The Phoneme Inventory of Taa (West !xoon
-Dialect).” In *Lone Tree – Scholarship in the Service of the Koon:
-Essays in Memory of Anthony T. Traill*, edited by Rainer Voßen and
-Wilfrid H. G. Haacke. Rüdiger Köppe Verlag.
+Naumann, Christfried. 2013. The phoneme inventory of Taa (West !Xoon
+dialect). In Rainer Voßen & Wilfrid H. G. Haacke (eds.), *Lone tree –
+scholarship in the service of the Koon: Essays in memory of Anthony T.
+Traill*. Rüdiger Köppe Verlag.
 
 </div>
 
 <div id="ref-R" class="csl-entry">
 
-R Core Team. 2021. *R: A Language and Environment for Statistical
-Computing*. Vienna, Austria: R Foundation for Statistical Computing.
+R Core Team. 2021. *R: A language and environment for statistical
+computing*. Vienna, Austria: R Foundation for Statistical Computing.
 
 </div>
 
 <div id="ref-testthat" class="csl-entry">
 
-Wickham, Hadley. 2011. “Testthat: Get Started with Testing.” *The R
-Journal* 3: 5–10.
+Wickham, Hadley. 2011. Testthat: Get started with testing. *The R
+Journal* 3. 5–10.
 
 </div>
 
@@ -2630,26 +2680,26 @@ Journal* 3: 5–10.
 
 Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy
 D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019.
-“Welcome to the <span class="nocase">tidyverse</span>.” *Journal of Open
-Source Software* 4 (43): 1686.
+Welcome to the <span class="nocase">tidyverse</span>. *Journal of Open
+Source Software* 4(43). 1686.
 
 </div>
 
 <div id="ref-Zipf1936" class="csl-entry">
 
-Zipf, George Kingsley. 1936. *The Psychobiology of Language*. London:
+Zipf, George Kingsley. 1936. *The psychobiology of language*. London:
 Routledge.
 
 </div>
 
 <div id="ref-Zipf1949" class="csl-entry">
 
-———. 1949. *Human Behavior and the Principle of Least Effort*. New York:
-Addison-Wesley.
+Zipf, George Kingsley. 1949. *Human behavior and the principle of least
+effort*. New York: Addison-Wesley.
 
 </div>
 
 </div>
 
-[^1]: See Naumann (2013) for a reassessment of the number of phonemes in
-    !Xoo.
+[^1]: See Naumann ([2013](#ref-Naumann2013)) for a reassessment of the
+    number of phonemes in !Xoo.
