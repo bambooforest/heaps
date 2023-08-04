@@ -3,9 +3,13 @@ title: "Supplementary materials for: How many speech sounds are there in the wor
 author: "Steven Moran & Nicholas A. Lester\n"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
-  github_document:
-      toc: true
+  pdf_document:
+    number_sections: true
+    latex_engine: xelatex    
 bibliography: 'bibliography.bib'
+biblio-style: "apalike"
+csl: unified-style-sheet-for-linguistics.csl
+link-citations: true
 ---
 
 ```{r setup, include=FALSE}
@@ -146,13 +150,19 @@ upsid_cumulative <- get_cumulative_segment_counts_df(upsid_long)
 Plot it.
 
 ```{r cumulative_plot_upsid}
-qplot(id, results, data = upsid_cumulative, xlab="Number of languages (random order)", ylab="Cumulative number of segment types") + theme_bw()
+qplot(id, results, data = upsid_cumulative, 
+      xlab="Number of languages (random order)", 
+      ylab="Cumulative number of segment types") + 
+  theme_bw()
 ```
 
 Now we plot the full PHOIBLE language sample. Note that the shape is similar, but the x-axis contains many more languages.
 
 ```{r, cumulative_plot_phoible}
-qplot(id, results, data = phoible_cumulative, xlab="Number of languages (random order)", ylab="Cumulative number of segment types") + theme_bw()
+qplot(id, results, data = phoible_cumulative, 
+      xlab="Number of languages (random order)", 
+      ylab="Cumulative number of segment types") + 
+  theme_bw()
 ```
 
 The jump in y-axis on both plots is [!Xoo](https://phoible.org/inventories/view/1379), a language reported in UPSID that contains many click consonants unique to this language and not found in any other language in the sample.^[See @Naumann2013 for a reassessment of the number of phonemes in !Xoo.]
@@ -213,18 +223,31 @@ segments_phoible$Rank <- 1:nrow(segments_phoible)
 And we plot the segment type frequency distributions.
 
 ```{r}
-plot(segments_upsid$Rank, segments_upsid$Frequency, xlab = "Rank", ylab = "Frequency", main = "UPSID-451 segment distribution")
-plot(segments_phoible$Rank, segments_phoible$Frequency, xlab = "Rank", ylab = "Frequency", main = "PHOIBLE phoneme distribution")
+plot(segments_upsid$Rank, segments_upsid$Frequency, 
+     xlab = "Rank", 
+     ylab = "Frequency", 
+     main = "UPSID-451 segment distribution")
+
+plot(segments_phoible$Rank, segments_phoible$Frequency, 
+     xlab = "Rank", 
+     ylab = "Frequency", 
+     main = "PHOIBLE phoneme distribution")
 ```
 
 We can also remove all segments with a frequency of one and look more closely at the distribution.
 
 ```{r}
 segments_gt_1_upsid <- segments_upsid %>% filter(Frequency > 1)
-plot(segments_gt_1_upsid$Rank, segments_gt_1_upsid$Frequency, xlab = "Rank", ylab = "Frequency", main = "UPSID segment distribution")
+plot(segments_gt_1_upsid$Rank, segments_gt_1_upsid$Frequency, 
+     xlab = "Rank", 
+     ylab = "Frequency", 
+     main = "UPSID segment distribution")
 
 segments_gt_1_phoible <- segments_phoible %>% filter(Frequency > 1)
-plot(segments_gt_1_phoible$Rank, segments_gt_1_phoible$Frequency, xlab = "Rank", ylab = "Frequency", main = "PHOIBLE segment distribution")
+plot(segments_gt_1_phoible$Rank, segments_gt_1_phoible$Frequency, 
+     xlab = "Rank", 
+     ylab = "Frequency", 
+     main = "PHOIBLE segment distribution")
 ```
 
 Next we plot log(rank) against log(frequency) and we see that the segment frequency distribution nicely follows Zipf's law.
@@ -245,8 +268,11 @@ zipf <- function(rank, a, b, c) {
 # Choosing the best parameters visually
 # lines(x, zipf(x_rank, -1.3, 18, 1000000), col = "green", lwd = 3)
 
-# Estimating the parameters -- TODO have set c lower
-fitted <- nls(y ~ zipf(x_rank, a, b, c), data = df, start = list(a = -1.3, b = 18, c = 100000), trace = T)
+# Estimating the parameters
+fitted <- nls(y ~ zipf(x_rank, a, b, c), 
+              data = df, 
+              start = list(a = -1.3, b = 18, c = 100000), 
+              trace = T)
 
 # Plotting the Zipf's law with the parameters estimated
 lines(x, predict(fitted), lty = 1, col = "lightblue", lwd = 4)
@@ -261,7 +287,10 @@ df <- data.frame(x, y)
 
 x_rank <- segments_gt_1_phoible$Rank
 
-plot(x, y, xlab = "Rank (log)", ylab = "Frequency (log)", main = "Zipf's law on PHOIBLE (OIPL)")
+plot(x, y, 
+     xlab = "Rank (log)", 
+     ylab = "Frequency (log)", 
+     main = "Zipf's law on PHOIBLE (OIPL)")
 
 zipf <- function(rank, a, b, c) {
   return(log(c) + a * log(rank + b))
@@ -271,7 +300,10 @@ zipf <- function(rank, a, b, c) {
 # lines(x, zipf(x_rank, -1.3, 18, 1000000), col = "green", lwd = 3)
 
 # Estimating the parameters
-fitted <- nls(y ~ zipf(x_rank, a, b, c), data = df, start = list(a = -1.3, b = 18, c = 1000000), trace = T)
+fitted <- nls(y ~ zipf(x_rank, a, b, c), 
+              data = df, 
+              start = list(a = -1.3, b = 18, c = 1000000), 
+              trace = T)
 
 # Plotting the Zipf's law with the parameters estimated
 lines(x, predict(fitted), lty = 1, col = "lightblue", lwd = 4)
@@ -353,7 +385,10 @@ heaps <- function(K, n, B) {
 # Get the total number of observations from PHOIBLE
 n <- sum(segments_phoible$Frequency) 
 
-# Settings of K and B based on trial and error -- not the optimal values, but the result is reasonably close to the true value. Therefore, if we do any model tuning, the values we arrive at should be close to these; otherwise, we most likely have a bad fit of Herdan-Heaps' to the data. 
+# Settings of K and B based on trial and error -- not the optimal values, but 
+# the result is reasonably close to the true value. Therefore, if we do any 
+# model tuning, the values we arrive at should be close to these; otherwise, 
+# we most likely have a bad fit of Herdan-Heaps' to the data. 
 heaps(8, n, .5)
 ```
 
@@ -412,7 +447,9 @@ heaps_results_phoible <- rand.heaps.data(phoible_long, 10)
 Now we fit linear regressions for UPSID-451 and PHOIBLE to generate (empirically) optimal values for *B* and *K* (our two free parameters in the Herdan-Heaps' equation).
 
 ```{r}
-fitHeaps.upsid <- lmer(log(type_count) ~ log(token_count) + (1|iteration), data = heaps_results_upsid)
+fitHeaps.upsid <- 
+  lmer(log(type_count) ~ log(token_count) + (1|iteration), 
+       data = heaps_results_upsid)
 
 logK.upsid <- fixef(fitHeaps.upsid)[1]
 B.upsid <- fixef(fitHeaps.upsid)[2]
@@ -457,7 +494,9 @@ The UPSID model fits quite nicely, suggesting that the distribution follows Herd
 Now for PHOIBLE, we begin with the "one-inventory-per-language" version of the database. 
 
 ```{r}
-fitHeaps.phoible <- lmer(log(type_count) ~ log(token_count) + (1|iteration), data = heaps_results_phoible)
+fitHeaps.phoible <- 
+  lmer(log(type_count) ~ log(token_count) + (1|iteration), 
+       data = heaps_results_phoible)
 
 logK.phoible<- fixef(fitHeaps.phoible)[1]
 B.phoible <- fixef(fitHeaps.phoible)[2]
@@ -533,7 +572,9 @@ Apply the Herdan-Heaps' model.
 
 ```{r}
 # Fit the model
-fitHeaps.phoible.all <- lmer(log(type_count) ~ log(token_count) + (1|iteration), data = heaps_results_phoible_all)
+fitHeaps.phoible.all <- 
+  lmer(log(type_count) ~ log(token_count) + (1|iteration), 
+       data = heaps_results_phoible_all)
 
 # Get the values for our parameters
 logK.phoible.all <- fixef(fitHeaps.phoible.all)[1]
@@ -639,7 +680,7 @@ We now explore an alternative, generally more flexible estimator of type counts:
 
 The central equation for the Chao-Shen estimator is given below [@Chao_etal2009]. The central parameter for extrapolation is *r*, which expresses the number of additional "sampling units" (in our case, languages) we expect to encounter. 
 
-![Chao et al., 2009](image.png)
+![Chao et al., 2009](figures/image.png)
 
 The Chao-Shen estimator takes an **incidence matrix** as input. An incidence matrix is a record of the presence of absence of some type of thing in each of a set of sampling units. Imagine that you are looking to estimate the number of types of beetles in a forest. You set up a number of traps around the forest to get a (hopefully) representative sample of the overall ecosystem. The traps are the sampling units. The species of beetles are the types. You visit each trap, and for each species of beetle you find there, you record a 1 for that species in that trap. 
 
@@ -664,6 +705,8 @@ Note that Phon<sub>1</sub> appears only once in the sample; it is a **singleton*
 
 @GotelliChao2013 functions coded in R by Nicholas Lester:
 
+\newpage
+
 ```{r}
 # args (hold the same for both equations)
 # - vector = frequency vector, cells = PHOIBLE frequency of a sound
@@ -684,7 +727,8 @@ Extrapolate <- function(vector, R, r) {
   }
 }
 
-# Function to estimate the number of unseen types from a proposed assemblage (used to compute our estimate of Q0)
+# Function to estimate the number of unseen types from a proposed assemblage 
+# (used to compute our estimate of Q0)
 S_Chao2 <- function(vector, R) {
   fd <- vector[vector > 0]
   Q1 <- sum(vector == 1)
@@ -874,37 +918,52 @@ choa.iter.plotter <- function(choa.df, mean.df, title){
 }
 
 # r = 10
-chao.iter.plot.10 <- choa.iter.plotter(chao.data.10.10, mean.obs.df.10, "r = 10") + ylim(0,4000)
+chao.iter.plot.10 <- 
+  choa.iter.plotter(chao.data.10.10, mean.obs.df.10, "r = 10") + 
+  ylim(0,4000)
 
 chao.iter.plot.10
 
 # r = 50
-chao.iter.plot.50 <- choa.iter.plotter(chao.data.50.10, mean.obs.df.50, "r = 50") + ylim(0,4000)
+chao.iter.plot.50 <- 
+  choa.iter.plotter(chao.data.50.10, mean.obs.df.50, "r = 50") + 
+  ylim(0,4000)
 
 chao.iter.plot.50
 
 # r = 100
-chao.iter.plot.100 <- choa.iter.plotter(chao.data.100.10, mean.obs.df.100, "r = 100") + ylim(0,4000)
+chao.iter.plot.100 <- 
+  choa.iter.plotter(chao.data.100.10, mean.obs.df.100, "r = 100") + 
+  ylim(0,4000)
 
 chao.iter.plot.100
 
 # r = 500
-chao.iter.plot.500 <- choa.iter.plotter(chao.data.500.10, mean.obs.df.500, "r = 500") + ylim(0,4000)
+chao.iter.plot.500 <- 
+  choa.iter.plotter(chao.data.500.10, mean.obs.df.500, "r = 500") + 
+  ylim(0,4000)
 
 chao.iter.plot.500
 
 # r = 1000
-chao.iter.plot.1000 <- choa.iter.plotter(chao.data.1000.10, mean.obs.df.1000, "r = 1000") + ylim(0,4000)
+chao.iter.plot.1000 <- 
+  choa.iter.plotter(chao.data.1000.10, mean.obs.df.1000, "r = 1000") + 
+  ylim(0,4000)
 
 chao.iter.plot.1000
 
 # r = 1500
-chao.iter.plot.1500 <- choa.iter.plotter(chao.data.1500.10, mean.obs.df.1500, "r = 1500") + ylim(0,4000)
+chao.iter.plot.1500 <- 
+  choa.iter.plotter(chao.data.1500.10, mean.obs.df.1500, "r = 1500") + 
+  ylim(0,4000)
 
 chao.iter.plot.1500
 
 # r = 2000
-chao.iter.plot.2000 <- choa.iter.plotter(chao.data.2000.10, mean.obs.df.2000, "r = 2000") + ylim(0,4000)
+chao.iter.plot.2000 <- 
+  choa.iter.plotter(chao.data.2000.10, mean.obs.df.2000, "r = 2000") + 
+  ylim(0,4000)
+
 chao.iter.plot.2000
 ```
 
@@ -933,7 +992,8 @@ increm.chao.plots <- ggarrange(chao.iter.plot.10 +
                                ncol=3,
                                nrow=3)
 
-annotate_figure(increm.chao.plots, bottom = "Number of languages (R)", left = "Estimated number of types")
+annotate_figure(increm.chao.plots, bottom = "Number of languages (R)", 
+                left = "Estimated number of types")
 ```
 
 In the above plots, the red lines represent the mean of the true number of observed types per number of languages *R*, across iterations. The blue lines represent the same taken over the Chao-Shen estimates. Grey lines represent the actual Chao-Shen estimates for each iteration. The panels reflect the different values of *r* tested here.
@@ -981,31 +1041,44 @@ diff.plotter <- function(df, mean.df, title){
     return(p)
 }
 
-chao.iter.diff.plot.10 <- diff.plotter(chao.data.10.10, mean.obs.df.10, "r=10") + ylim(-2500, 400)
+chao.iter.diff.plot.10 <- 
+  diff.plotter(chao.data.10.10, mean.obs.df.10, "r=10") + 
+  ylim(-2500, 400)
 
 chao.iter.diff.plot.10
 
-chao.iter.diff.plot.50 <- diff.plotter(chao.data.50.10, mean.obs.df.50,"r=50") + ylim(-2500, 400)
+chao.iter.diff.plot.50 <- 
+  diff.plotter(chao.data.50.10, mean.obs.df.50,"r=50") + 
+  ylim(-2500, 400)
 
 chao.iter.diff.plot.50
 
-chao.iter.diff.plot.100 <- diff.plotter(chao.data.100.10, mean.obs.df.100,"r=100") + ylim(-2500, 400)
+chao.iter.diff.plot.100 <- 
+  diff.plotter(chao.data.100.10, mean.obs.df.100,"r=100") + 
+  ylim(-2500, 400)
 
 chao.iter.diff.plot.100
 
-chao.iter.diff.plot.500 <- diff.plotter(chao.data.500.10, mean.obs.df.500,"r=500") + ylim(-2500, 400)
+chao.iter.diff.plot.500 <- 
+  diff.plotter(chao.data.500.10, mean.obs.df.500,"r=500") + 
+  ylim(-2500, 400)
 
 chao.iter.diff.plot.500
 
-chao.iter.diff.plot.1000 <- diff.plotter(chao.data.1000.10, mean.obs.df.1000,"r=1000") + ylim(-2500, 400)
+chao.iter.diff.plot.1000 <- 
+  diff.plotter(chao.data.1000.10, mean.obs.df.1000,"r=1000") + 
+  ylim(-2500, 400)
 
 chao.iter.diff.plot.1000
 
-chao.iter.diff.plot.1500 <- diff.plotter(chao.data.1500.10, mean.obs.df.1500,"r=1500") + ylim(-2500, 400)
+chao.iter.diff.plot.1500 <- 
+  diff.plotter(chao.data.1500.10, mean.obs.df.1500,"r=1500") + 
+  ylim(-2500, 400)
 
 chao.iter.diff.plot.1500
 
-chao.iter.diff.plot.2000 <- diff.plotter(chao.data.2000.10, mean.obs.df.2000,"r=2000")
+chao.iter.diff.plot.2000 <- 
+  diff.plotter(chao.data.2000.10, mean.obs.df.2000,"r=2000")
 
 chao.iter.diff.plot.2000
 ```
@@ -1126,7 +1199,8 @@ Next, we fit the model.
 
 ```{r}
 # Fit the model
-fitHeaps.phoible.rand.1k <- lmer(log(type_count) ~ log(token_count) + (1|iteration), data=rand.pho.1k.results)
+fitHeaps.phoible.rand.1k <- 
+  lmer(log(type_count) ~ log(token_count) + (1|iteration), data=rand.pho.1k.results)
 
 # Get the coefficients
 logK.phoible.1k <- fixef(fitHeaps.phoible.rand.1k)[1]
@@ -1666,9 +1740,14 @@ ups.mean.extrap-chao.ext
 
 Plot these results
 ```{r diff_plots_ext}
-plot.diff.dat <- data.frame(Type.ct.est = c(pho.mean.extrap, predictions, chao.ext), Estimator = factor(rep(c("HH Approach 1", "HH Approach 2", "Chao-Shen"), each = 4)), Sample.Size = factor(rep(c("7151", "10K", "50K", "100K"), 3)))
+plot.diff.dat <- 
+  data.frame(Type.ct.est = c(pho.mean.extrap, predictions, chao.ext), 
+             Estimator = factor(rep(c("HH Approach 1", "HH Approach 2", "Chao-Shen"), each = 4)), 
+             Sample.Size = factor(rep(c("7151", "10K", "50K", "100K"), 3)))
 
-plot.diff.dat$Sample.Size = factor(plot.diff.dat$Sample.Size, levels = levels(plot.diff.dat$Sample.Size)[c(4, 2, 3, 1)])
+plot.diff.dat$Sample.Size = 
+  factor(plot.diff.dat$Sample.Size, 
+         levels = levels(plot.diff.dat$Sample.Size)[c(4, 2, 3, 1)])
 
 p = ggplot(plot.diff.dat, aes(y = Type.ct.est, x = Estimator, fill = Sample.Size), group = Estimator) +
     geom_bar(stat="identity", position="dodge") + 

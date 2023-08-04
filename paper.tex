@@ -100,8 +100,19 @@
   pdfcreator={LaTeX via pandoc}}
 
 \title{How many speech sounds are there in the world's languages?}
-\author{Steven Moran \& Nicholas A. Lester}
-\date{22 June, 2023}
+\author{Steven Moran\textsuperscript{1,2} \& Nicholas A.
+Lester\textsuperscript{3}\\
+\textsuperscript{1}Institute of Biology, University of Neuchâtel,
+Neuchâtel, Switzerland\\
+\textsuperscript{2}Department of Anthropology, University of Miami,
+Coral Gables, FL, USA\\
+\textsuperscript{3}Department of Linguistics, University of North Texas,
+Denton, TX, USA\\
+OrcID, SM, 0000-0002-3969-6549\\
+Corresponding authors:
+\href{mailto:steven.moran@unine.ch}{\nolinkurl{steven.moran@unine.ch}};
+\href{mailto:nicholas.a.lester@gmail.com}{\nolinkurl{nicholas.a.lester@gmail.com}}}
+\date{04 August, 2023}
 
 \begin{document}
 \maketitle
@@ -118,18 +129,18 @@ increasingly new text. We find that both models produce accurate
 estimates of the diversity of contrastive speech sounds (phonemes) in
 existing typological databases. Our findings suggest that (a) most
 phonemes are difficult to detect because they are rare, and (b)
-documenting more phonological repertoires cross-linguistically always
-yields more phoneme types. As a sanity check, we apply an unrelated
-estimator of species diversity from biology, Chao-Shen, and show that
-its estimates align with Herdan-Heaps' law. We use both models to
-extrapolate phoneme counts to undocumented languages, resulting in an
-estimate of 4600-4900 distinct phonemes in the full set of languages
-thought to be spoken today (\textasciitilde7-8k), which is roughly 1.5x
-more than what is currently documented in the world's languages
-(\textasciitilde35\%). By extrapolating to hypothetical sample sizes,
-e.g., the number of languages estimated to have been spoken through
-time, and beyond, we find no indication of convergence: infinite
-languages mean infinite phonemes.
+increased documentation of phonological inventories always yields more
+phoneme types. To check this, we apply an unrelated estimator of species
+diversity from biology, Chao-Shen, and show that its estimates also
+align with Herdan-Heaps' law. We use both models to extrapolate phoneme
+counts to undocumented languages, resulting in an estimate of 4600-4900
+distinct phonemes in the full set of languages thought to be spoken
+today (\textasciitilde7-8k), which is roughly 1.5 time more than what is
+currently documented in the world's languages (\textasciitilde35\%). By
+extrapolating to hypothetical sample sizes, e.g., the number of
+languages estimated to have been spoken through time, and beyond, we
+find no indication of convergence: infinite languages mean infinite
+phonemes.
 
 \emph{Keywords}: speech, phonetics, phonology, language, Zipf's law,
 Herdan-Heaps' law
@@ -1235,13 +1246,13 @@ of documented phoneme types is 3183. Therefore, the models argue for the
 existence of approximately 1500 yet to be documented phoneme types. As
 we probe increasingly larger and theoretically motivated language sample
 sizes, i.e., languages that existed \emph{through time} (e.g., estimates
-including 30k-500k (\protect\hyperlink{ref-Pagel2000}{Pagel 2000}) or
-64k-140k (\protect\hyperlink{ref-Crystal2002}{Crystal 2002})), the
+including 30-500k (\protect\hyperlink{ref-Pagel2000}{Pagel 2000}) or
+64-140k (\protect\hyperlink{ref-Crystal2002}{Crystal 2002})), the
 Herdan-Heaps' model predicted a continual increase in the number of
-unique phonemes, reaching values as high as 19K. The Chao-Shen model
-produced much more conservative estimates for samples of size 10K and
+unique phonemes, reaching values as high as 19k. The Chao-Shen model
+produced much more conservative estimates for samples of size 10k and
 above, even appearing to settle on an asymptote of roughly 5500 phonemes
-for samples of 100K languages or more. However, when we compare the
+for samples of 100k languages or more. However, when we compare the
 predictions of Herdan-Heaps and Chao-Shen against known type counts in a
 closed dataset, the source of the discrepancy emerged: as the sample
 grows, Chao-Shen lags behind Herdan-Heaps in approximating the true
@@ -1255,52 +1266,65 @@ which new phonemes are discovered per language will always decrease; and
 (3) the decrease in the rate of new observations will never reach 0.
 Thus, based on the evidence presented here, we have no reason to believe
 that there is an upper bound on the number of unique phonemes possible
-in spoken languages. Infinite linguistic diversity seems to breed
+in spoken languages. Infinite linguistic diversity seems to bring about
 infinite possible phonemes. But what would it mean if there were indeed
 infinitely many potential phonemes?
 
-If one adopts a feature-based perspective on the phonetic targets of
-phonemes, then there is an \emph{a priori} upper bound of \(2^F\)
-contrastive sounds, where \(F\) is the number of feature categories and
-2 reflects the choice between presence (+) or absence (-) of that
-feature.\footnote{In some feature sets, some values may be 0, i.e.,
-  undefined, underspecified, or ``for which a segment can be said `not
-  to care''' (\protect\hyperlink{ref-Hayes2009}{Hayes 2009}, pg. 91).
-  For example, speech sounds that are -coronal are underspecified for
-  the features +/-anterior and +/-distributed, which capture coronal
-  distinctions for places of articulation involving (inter-)dentals and
-  alveolars vs palatal alveolars and retroflexes (anterior), and laminal
-  vs apical coronals (distributed).} Clements
+If one adopts a distinctive feature-based perspective on the phonetic
+targets of phonemes, then there is an \emph{a priori} upper bound of
+\(2^F\) contrastive sounds, where \(F\) is the number of feature
+categories and 2 reflects the choice between presence (+) or absence (-)
+of that feature.\footnote{In some distinctive feature sets, some values
+  may be 0, i.e., undefined, underspecified, or ``for which a segment
+  can be said `not to care''' (\protect\hyperlink{ref-Hayes2009}{Hayes
+  2009}, pg. 91). For example, speech sounds that are -coronal are
+  underspecified for the features +/-anterior and +/-distributed, which
+  capture coronal distinctions for places of articulation involving
+  (inter-)dentals and alveolars vs palatal alveolars and retroflexes
+  (anterior), and laminal vs apical coronals (distributed).} Clements
 (\protect\hyperlink{ref-Clements2009}{2009}) coined this calculation
 \emph{Feature Bounding}. The expected number of unique phonemes is
 controlled by the number of features, where additional features increase
 the pool of possible distinctive segments (nearly) exponentially. For
 example, given a feature set such as in PHOIBLE with 37 distinctive
 features, an upper bound on the number of segments under a strictly
-binary formalization is over 137 billion (2\^{}37) feature vectors.
+binary formalization is over 137 billion (2\^{}37) feature vectors. In
+general, distinctive feature theories of different theoretical stances
+propose around two dozen features
+(\protect\hyperlink{ref-MielkeHume2006}{Mielke \& Hume 2006}), which
+still has the potential to generate over 16 million distinct feature
+vectors (2\^{}24). Crucially, this theoretical bound on phoneme
+diversity does not in itself preclude the possibility of infinitely many
+phonemes. To get there, one would only need to discover infinitely many
+distinctive features. But, as pointed out by Lindblom
+(\protect\hyperlink{ref-Lindblom1990a}{1990}), most proponents of
+feature-based analysis assume a fixed, small-ish inventory of features.
+The question would then be: how does the feature pool grow empirically
+with the addition of new languages? Does it converge as assumed?
+Unfortunately, this question presents a host of new challenges, not the
+least of which concerns how to define the features themselves.
 
-However, most widely accepted feature sets contain features that are
-specified at different levels of phonetic detail: some features are more
-abstract (i.e., general similarities such as +/- syllabic), while others
-are more concrete (i.e., closer to the articulatory reality, e.g.,
-advanced tongue root). Some are grounded in pure articulatory or
-acoustic phonetics, while others involve phonological properties of
-language. And looming in the background of these discussions, the debate
-of whether distinctive features are innate and universal or rather
-learned and emergent continues. Nevertheless, in general, distinctive
-feature theories of different theoretical stances propose around two
-dozen features (\protect\hyperlink{ref-MielkeHume2006}{Mielke \& Hume
-2006}), which still has the potential to generate over 16 million
-distinct feature vectors (2\^{}24). Current consensus aside, there does
-not appear to be a principled limit to the degree of phonetic
-specificity that can be encoded by a feature. Making finer and finer
-contrasts may always produce more and more features. Thus, the exponent
-in the Feature Bounding calculation can itself (by hypothesis) be
-infinite, in line with the predictions of the models presented here, and
-therefore with the notion of infinite possible phonemes. That said,
-contemporary feature sets can capture phonological classes for place and
-manner of articulation, which neatly classify the phonological patterns
-and processes in and across languages (cf. Mielke
+Most widely accepted feature sets define features that are specified at
+different levels of phonetic detail: some features are more abstract
+(i.e., general similarities such as +/- syllabic), while others are more
+concrete (i.e., closer to the articulatory reality, e.g., advanced
+tongue root). Some are grounded in pure articulatory or acoustic
+phonetics, while others involve phonological properties of language. And
+looming in the background of these discussions, the debate of whether
+distinctive features are innate and universal or rather learned and
+emergent continues. Thus, the precise limits on what may be included as
+a feature are underspecified and a matter of some controversy (for more
+fundamental critiques of features and how they are defined, see Lindblom
+(\protect\hyperlink{ref-Lindblom1990a}{1990})). Current consensus and
+critiques aside, there does not appear to be a principled limit to the
+degree of phonetic specificity that can be encoded by a feature. Making
+finer and finer contrasts may always produce more and more features.
+Thus, the exponent in the Feature Bounding calculation can itself (by
+hypothesis) be infinite, in line with the predictions of the models
+presented here, and therefore with the notion of infinite possible
+phonemes. That said, contemporary feature sets can capture phonological
+classes for place and manner of articulation, which neatly classify the
+phonological patterns and processes in and across languages (cf. Mielke
 (\protect\hyperlink{ref-Mielke2008}{2008})).
 
 We have so far seen that the feature space is a discrete re-coding of
@@ -1311,16 +1335,16 @@ objection to this account is that humans are subject to physiological
 limits, both in production and perception. In speech production,
 articulatory gestures are executed with some degree of imprecision
 (\protect\hyperlink{ref-Ladefoged_etal1972}{Ladefoged et al. 1972};
-\protect\hyperlink{ref-Lindblom1990}{Lindblom 1990}). If this stochastic
-variability is greater than the difference between two or more phonetic
-targets, then no reliable distinction can be sustained (cf. Stevens
-(\protect\hyperlink{ref-Stevens1972}{1972})). In comparison, if the
-range of articulatory gestures is greater than their acoustic (or
-perceptual) reception, there is a ``many-to-one'' mapping between
-articulation and perception. In perception, the ability to discriminate
-acoustic stimuli is also limited both anatomically and cognitively.
-Differences in the signal that fall below the various thresholds for
-discrimination are thus ignored.
+\protect\hyperlink{ref-LindblomSundberg1971}{Lindblom \& Sundberg
+1971}). If this stochastic variability is greater than the difference
+between two or more phonetic targets, then no reliable distinction can
+be sustained (cf. Stevens (\protect\hyperlink{ref-Stevens1972}{1972})).
+In comparison, if the range of articulatory gestures is greater than
+their acoustic (or perceptual) reception, there is a ``many-to-one''
+mapping between articulation and perception. In perception, the ability
+to discriminate acoustic stimuli is also limited both anatomically and
+cognitively. Differences in the signal that fall below the various
+thresholds for discrimination are thus ignored.
 
 In response to these physical constraints, languages tend to spread
 their phonological inventories across the articulatory and acoustic
@@ -1342,11 +1366,10 @@ perceived by a single ear.
 
 Given that all speakers use perceptually contrastive cues (whether
 signed, spoken or written), how these continuous signals map to discrete
-elements is a core question of language science that goes beyond
-whatever the phonetics-phonology interface may or may not be. Thus, we
-believe the approach presented here has broad applications to the study
-of other areas of grammar and to the cross-linguistic study of
-languages.
+elements is a core question of language science that goes beyond what
+the phonetics-phonology interface may or may not be. Thus, we believe
+the approaches presented here have broad applications to the study of
+other areas of grammar and to the cross-linguistic study of languages.
 
 \hypertarget{data-accessibility}{%
 \section{Data accessibility}\label{data-accessibility}}
@@ -1381,7 +1404,7 @@ results, and wrote the paper.
 \leavevmode\vadjust pre{\hypertarget{ref-BaezaNavarro2000}{}}%
 Baeza--Yates, Ricardo \& Gonzalo Navarro. 2000. Block addressing indices
 for approximate text retrieval. \emph{Journal of the American Society
-for Information Science}. Wiley Online Library 51(1). 69--82.
+for Information Science} 51(1). 69--82.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Boersma2001}{}}%
 Boersma, Paul. 2001. Praat, a system for doing phonetics by computer.
@@ -1393,8 +1416,8 @@ Brants, Thorsten \& Alex Franz. 2006. {Web 1T 5-gram Version 1 (2006)}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-ChaoChiu2016}{}}%
 Chao, Anne \& Chun-Huo Chiu. 2016. Species richness: Estimation and
-comparison. In \emph{Wiley StatsRef: Statistics reference online},
-1--26. John Wiley \& Son.
+comparison. In \emph{{Wiley StatsRef: Statistics Reference Online}},
+1--26. John Wiley \& Sons.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Chao_etal2009}{}}%
 Chao, Anne, Robert K Colwell, Chih-Wei Lin \& Nicholas J Gotelli. 2009.
@@ -1415,29 +1438,27 @@ architecture and representations in phonology}, 19--68. MIT Press.
 Crystal, David. 2002. \emph{Language death}. Cambridge University Press.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Egghe2007}{}}%
-Egghe, Leo. 2007. Untangling herdan's law and heaps' law: Mathematical
-and informetric arguments. \emph{Journal of the American Society for
-Information Science and Technology}. Wiley Online Library 58(5).
-702--709.
+Egghe, Leo. 2007. Untangling {Herdan's} law and {Heaps'} law:
+Mathematical and informetric arguments. \emph{Journal of the American
+Society for Information Science and Technology} 58(5). 702--709.
 
 \leavevmode\vadjust pre{\hypertarget{ref-EvansLevinson2009}{}}%
 Evans, Nicholas \& Stephen C. Levinson. 2009. The myth of language
 universals: Language diversity and its importance for cognitive science.
-\emph{Behavioral and Brain Sciences}. Cambridge University Press 32(5).
-429--448.
+\emph{Behavioral and Brain Sciences} 32(5). 429--448.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Everett2018}{}}%
 Everett, Caleb. 2018. The similar rates of occurrence of consonants
 across the world's languages: A quantitative analysis of phonetically
-transcribed word lists. \emph{Language Sciences}. Elsevier 69. 125--135.
+transcribed word lists. \emph{Language Sciences} 69. 125--135.
 
 \leavevmode\vadjust pre{\hypertarget{ref-FirchowFirchow1969}{}}%
-Firchow, Irwin \& Jacqueline Firchow. 1969. {An Abbreviated Phoneme
-Inventory}. \emph{Anthropological Linguistics} 11. 271--276.
+Firchow, Irwin \& Jacqueline Firchow. 1969. An abbreviated phoneme
+inventory. \emph{Anthropological Linguistics} 11. 271--276.
 
 \leavevmode\vadjust pre{\hypertarget{ref-GoodCysouw2013}{}}%
 Good, Jeff \& Michael Cysouw. 2013. Languoid, doculect, and glossonym:
-Formalizing the notion'language'. \emph{Language Documentation and
+Formalizing the notion {``language.''} \emph{Language Documentation \&
 Conservation} 7. 331--359.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Hayes2009}{}}%
@@ -1448,7 +1469,8 @@ Heaps, Harold Stanley. 1978. \emph{Information retrieval, computational
 and theoretical aspects}. Academic Press.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Herdan1964}{}}%
-Herdan, Gustav. 1964. Quantitative linguistics. Butterworth.
+Herdan, Gustav. 1964. \emph{Quantitative linguistics}. London:
+Butterworth.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Hockett1963}{}}%
 Hockett, Charles. 1963. The problem of universals in language. In Joseph
@@ -1460,8 +1482,7 @@ Hockett, Charles F. 1995. The birth and deaths of the phoneme.
 \emph{Id{é}ologies dans le Monde Anglo-Saxon} 8. 5--50.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Joos1948}{}}%
-Joos, Martin. 1948. Acoustic phonetics. \emph{Language}. Linguistic
-Society of America 24(2). 5--136. (7 December, 2022).
+Joos, Martin. 1948. Acoustic phonetics. \emph{Language} 24(2). 5--136.
 
 \leavevmode\vadjust pre{\hypertarget{ref-JustesonStephens1984}{}}%
 Justeson, John S. \& Laurence D. Stephens. 1984. On the relationship
@@ -1475,26 +1496,28 @@ Kornai, András. 2002. {How many words are there?} \emph{Glottometrics}
 \leavevmode\vadjust pre{\hypertarget{ref-Ladefoged_etal1972}{}}%
 Ladefoged, Peter, Joseph DeClerk, Mona Lindau \& George Papcun. 1972. An
 auditory-motor theory of speech production. \emph{{UCLA} working papers
-in phonetics}. UCLA Los Angeles, CA 22(48). 48--76.
+in phonetics} 22(48). 48--76.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Lehfeldt1975}{}}%
-Lehfeldt, W. 1975. {Die Verteilung der Phonemanzahl in den nat{ü}rlichen
-Sprachen}. \emph{Phonetica} 31. 247--287.
+Lehfeldt, Werner. 1975. {Die Verteilung der Phonemanzahl in den
+nat{ü}rlichen Sprachen}. \emph{Phonetica} 31. 247--287.
 
 \leavevmode\vadjust pre{\hypertarget{ref-vanLeijenhorst2005}{}}%
 Leijenhorst, Dick C van \& Th P Van der Weide. 2005. A formal derivation
-of heaps' law. \emph{Information Sciences}. Elsevier 170(2-4). 263--272.
+of {Heaps'} law. \emph{Information Sciences} 170(2-4). 263--272.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Lindblom1990}{}}%
-Lindblom, Björn. 1990. Explaining phonetic variation: A sketch of the
-h\&h theory. In W. J. Hardcastle \& A. Marchal (eds.), \emph{Speech
-production and speech modelling}, 403--439. Springer.
-https://doi.org/\url{https://doi.org/10.1007/978-94-009-2037-8_16}.
+\leavevmode\vadjust pre{\hypertarget{ref-Lindblom1990a}{}}%
+Lindblom, Björn. 1990. On the notion of {``possible speech sound.''}
+\emph{Journal of Phonetics} 18(2). 135--152.
+
+\leavevmode\vadjust pre{\hypertarget{ref-LindblomSundberg1971}{}}%
+Lindblom, Björn \& Johan Sundberg. 1971. Acoustical consequences of lip,
+tongue, jaw, and larynx movement. \emph{The Journal of the Acoustical
+Society of America} 50(4B). 1166--1179.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Macklin-CordesRound2020}{}}%
 Macklin-Cordes, Jayden L \& Erich R Round. 2020. Re-evaluating phoneme
-frequencies. \emph{Frontiers in Psychology}. Frontiers Media SA 11.
-570895.
+frequencies. \emph{Frontiers in Psychology} 11. 570895.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Maddieson1984}{}}%
 Maddieson, Ian. 1984. \emph{Patterns of sounds}. Cambridge: Cambridge
@@ -1512,10 +1535,10 @@ working papers in phonetics}, vol. 74, 104--111. Department of
 Linguistics, UCLA.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Martindale_etal1996}{}}%
-Martindale, Colin, S. M. Gusein‐Zade, Dean McKenzie \& Mark Yu.
+Martindale, Colin, S. M. Gusein-Zade, Dean McKenzie \& Mark Yu.
 Borodovsky. 1996. Comparison of equations describing the ranked
 frequency distributions of graphemes and phonemes. \emph{Journal of
-Quantitative Linguistics}. Routledge 3(2). 106--112.
+Quantitative Linguistics} 3(2). 106--112.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Mielke2008}{}}%
 Mielke, Jeff. 2008. \emph{{The Emergence of Distinctive Features}}.
@@ -1523,11 +1546,11 @@ Oxford University Press.
 
 \leavevmode\vadjust pre{\hypertarget{ref-MielkeHume2006}{}}%
 Mielke, Jeff \& Elizabeth Hume. 2006. Distinctive features. In
-\emph{Encylopedia of langauge}. Elsevier.
+\emph{{Encylopedia of Langauge}}. Elsevier.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Milivcka2009}{}}%
 Milička, Jiři. 2009. Type-token \& hapax-token relation: A combinatorial
-model. \emph{Glottotheory}. De Gruyter Akademie Forschung 2(1). 99--110.
+model. \emph{Glottotheory} 2(1). 99--110.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Moran2012}{}}%
 Moran, Steven. 2012. \emph{{Phonetics Information Base and Lexicon}}.
@@ -1547,11 +1570,11 @@ Press.
 \leavevmode\vadjust pre{\hypertarget{ref-Piantadosi2014}{}}%
 Piantadosi, Steven T. 2014. Zipf's word frequency law in natural
 language: A critical review and future directions. \emph{Psychonomic
-bulletin \& review}. Springer 21(5). 1112--1130.
+Bulletin \& Review} 21(5). 1112--1130.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Potter1945}{}}%
-Potter, Ralph K. 1945. Visible patterns of sound. \emph{Science}.
-American Association for the Advancement of Science 102(2654). 463--470.
+Potter, Ralph K. 1945. Visible patterns of sound. \emph{Science}
+102(2654). 463--470.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Snyman1970}{}}%
 Snyman, J. W. 1970. \emph{{An Introduction to the !Xu (!Kung)
@@ -1559,17 +1582,17 @@ Language}}. Capetown: A. A. Balkema.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Snyman1975}{}}%
 Snyman, J. W. 1975. \emph{{Zu\textbar'hoasi Fonologie en Woordeboek}}.
-Cape Town: Balkema.
+Cape Town: A. A. Balkema.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Stevens1972}{}}%
 Stevens, Kenneth N. 1972. The quantal nature of speech: Evidence from
 articulatory-acoustic data. In Edward E David \& Peter B Denes (eds.),
-\emph{Human communication: A unified view}. McGraw-Hill.
+\emph{Human communication: A unified view}. New York: McGraw-Hill.
 
 \leavevmode\vadjust pre{\hypertarget{ref-TambovtsevMartindale2007}{}}%
 Tambovtsev, Yuri \& Colin Martindale. 2007. Phoneme frequencies follow a
-yule distribution. \emph{SKASE Journal of Theoretical Linguistics}.
-Citeseer 4(2). 1--11.
+{Yule} distribution. \emph{SKASE Journal of Theoretical Linguistics}
+4(2). 1--11.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Whalen2019}{}}%
 Whalen, Douglas H. 2016. Phonetics. In \emph{Oxford research
