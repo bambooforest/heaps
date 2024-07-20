@@ -1,0 +1,1821 @@
+Random baselines for PHOIBLE
+================
+Nicholas A. Lester
+2024-01-03
+
+-   <a href="#1-introduction" id="toc-1-introduction">1. Introduction</a>
+-   <a href="#randbase" id="toc-randbase">2. Question 1: Random baselines
+    and ablation of confounding information</a>
+    -   <a href="#info" id="toc-info">2.1 Information used to construct random
+        baselines</a>
+    -   <a href="#211-consonant-inventory-size"
+        id="toc-211-consonant-inventory-size">2.1.1 Consonant inventory size</a>
+    -   <a href="#212-relative-cross-linguistic-phoneme-frequency"
+        id="toc-212-relative-cross-linguistic-phoneme-frequency">2.1.2 Relative
+        cross-linguistic phoneme frequency</a>
+-   <a href="#data" id="toc-data">2.2 Preliminaries</a>
+    -   <a href="#221-find-the-inventory-sizes-in-phoible"
+        id="toc-221-find-the-inventory-sizes-in-phoible">2.2.1 Find the
+        inventory sizes in PHOIBLE</a>
+    -   <a href="#222-plot-the-shape-of-the-inventory-size-distributions"
+        id="toc-222-plot-the-shape-of-the-inventory-size-distributions">2.2.2
+        Plot the shape of the inventory size distributions</a>
+    -   <a href="#223-plot-the-log-log-rankfrequency-relationship"
+        id="toc-223-plot-the-log-log-rankfrequency-relationship">2.2.3 Plot the
+        log-log rank/frequency relationship</a>
+    -   <a href="#224-extract-the-set-of-phonemes"
+        id="toc-224-extract-the-set-of-phonemes">2.2.4 Extract the set of
+        phonemes.</a>
+    -   <a href="#225-extract-the-number-of-distinct-inventories"
+        id="toc-225-extract-the-number-of-distinct-inventories">2.2.5 Extract
+        the number of distinct inventories.</a>
+    -   <a href="#226-processing-phoible" id="toc-226-processing-phoible">2.2.6
+        Processing PHOIBLE</a>
+        -   <a href="#2261-cumulative-counts"
+            id="toc-2261-cumulative-counts">2.2.6.1 Cumulative counts</a>
+        -   <a href="#2262-model-the-phoible-frequencies"
+            id="toc-2262-model-the-phoible-frequencies">2.2.6.2 Model the PHOIBLE
+            frequencies</a>
+        -   <a href="#2263-plot-the-results" id="toc-2263-plot-the-results">2.2.6.3
+            Plot the results</a>
+-   <a href="#alg1" id="toc-alg1">2.3 Algorithm 1: Remove inventory size
+    information but retain relative frequencies</a>
+    -   <a
+        href="#231-generate-10-different-versions-of-the-random-database-using-alg-1"
+        id="toc-231-generate-10-different-versions-of-the-random-database-using-alg-1">2.3.1
+        Generate 10 different versions of the random database using Alg. 1</a>
+    -   <a
+        href="#232-compute-the-hypothetical-heaps-estimates-based-on-the-constructed-databases"
+        id="toc-232-compute-the-hypothetical-heaps-estimates-based-on-the-constructed-databases">2.3.2
+        Compute the hypothetical Heaps’ estimates based on the constructed
+        databases</a>
+    -   <a href="#phoplot" id="toc-phoplot">2.3.3 Graphing</a>
+-   <a href="#alg2" id="toc-alg2">2.4 Algorithm 2: Preserve inventory size
+    information but ablate relative phoneme frequency</a>
+    -   <a
+        href="#241-generating-10-databases-with-the-same-number-of-inventories-as-phoible-using-alg-2"
+        id="toc-241-generating-10-databases-with-the-same-number-of-inventories-as-phoible-using-alg-2">2.4.1
+        Generating 10 databases with the same number of inventories as PHOIBLE
+        using Alg. 2</a>
+    -   <a
+        href="#242-compute-the-hypothetical-heaps-estimates-based-on-the-constructed-databases"
+        id="toc-242-compute-the-hypothetical-heaps-estimates-based-on-the-constructed-databases">2.4.2
+        Compute the hypothetical Heaps’ estimates based on the constructed
+        databases</a>
+    -   <a href="#243-graphing" id="toc-243-graphing">2.4.3 Graphing</a>
+-   <a href="#alg3" id="toc-alg3">2.5 Algorithm 3: Ablate both inventory
+    size and relative frequency</a>
+    -   <a
+        href="#251-generating-10-databases-with-the-same-number-of-inventories-as-phoible-using-alg-2"
+        id="toc-251-generating-10-databases-with-the-same-number-of-inventories-as-phoible-using-alg-2">2.5.1
+        Generating 10 databases with the same number of inventories as PHOIBLE
+        using Alg. 2</a>
+    -   <a
+        href="#252-compute-the-hypothetical-heaps-estimates-based-on-the-constructed-databases"
+        id="toc-252-compute-the-hypothetical-heaps-estimates-based-on-the-constructed-databases">2.5.2
+        Compute the hypothetical Heaps’ estimates based on the constructed
+        databases</a>
+    -   <a href="#253-graphing" id="toc-253-graphing">2.5.3 Graphing</a>
+-   <a href="#alg4" id="toc-alg4">2.6 Algorithm 4: Preserving both inventory
+    size and relative frequency</a>
+    -   <a
+        href="#261-generating-10-databases-with-the-same-number-of-inventories-as-phoible-using-alg-2"
+        id="toc-261-generating-10-databases-with-the-same-number-of-inventories-as-phoible-using-alg-2">2.6.1
+        Generating 10 databases with the same number of inventories as PHOIBLE
+        using Alg. 2</a>
+    -   <a
+        href="#262-compute-the-hypothetical-heaps-estimates-based-on-the-constructed-databases"
+        id="toc-262-compute-the-hypothetical-heaps-estimates-based-on-the-constructed-databases">2.6.2
+        Compute the hypothetical Heaps’ estimates based on the constructed
+        databases</a>
+    -   <a href="#263-graphing" id="toc-263-graphing">2.6.3 Graphing</a>
+    -   <a href="#264-increasing-the-number-of-languages-per-iteration"
+        id="toc-264-increasing-the-number-of-languages-per-iteration">2.6.4
+        Increasing the number of languages per iteration</a>
+-   <a href="#disc1" id="toc-disc1">2.7 Discussion</a>
+-   <a href="#conc1" id="toc-conc1">2.8 Conclusion</a>
+-   <a href="#overfit" id="toc-overfit">3. Question 2: Testing for
+    overfitting</a>
+    -   <a href="#31-modeling-and-prediction"
+        id="toc-31-modeling-and-prediction">3.1 Modeling and prediction</a>
+    -   <a href="#32-plotting-predicted-values-against-empirical-values"
+        id="toc-32-plotting-predicted-values-against-empirical-values">3.2
+        Plotting predicted values against empirical values</a>
+    -   <a href="#33-plotting-predicted-values-per-inventory"
+        id="toc-33-plotting-predicted-values-per-inventory">3.3 Plotting
+        predicted values per inventory</a>
+-   <a href="#34-discussion" id="toc-34-discussion">3.4 Discussion</a>
+-   <a href="#popmodels" id="toc-popmodels">4. Q3: Population-based
+    sampling</a>
+    -   <a href="#41-measuring-population-size"
+        id="toc-41-measuring-population-size">4.1 Measuring population size</a>
+        -   <a href="#411-elp-data" id="toc-411-elp-data">4.1.1 ELP data</a>
+        -   <a href="#412-ethnologuewiki-data"
+            id="toc-412-ethnologuewiki-data">4.1.2 Ethnologue/Wiki data</a>
+        -   <a href="#413-finalize-the-population-table"
+            id="toc-413-finalize-the-population-table">4.1.3 Finalize the population
+            table</a>
+        -   <a href="#414-exploratory-plotting-of-population-sizes"
+            id="toc-414-exploratory-plotting-of-population-sizes">4.1.4 Exploratory
+            plotting of population sizes</a>
+    -   <a href="#42-modeling" id="toc-42-modeling">4.2 Modeling</a>
+        -   <a href="#421-category--and-population-based-cross-prediction"
+            id="toc-421-category--and-population-based-cross-prediction">4.2.1
+            Category- and population-based cross-prediction</a>
+        -   <a href="#50v50" id="toc-50v50">4.2.1.3 Top 50% vs. bottom 50%</a>
+        -   <a href="#75v25" id="toc-75v25">4.2.1.4 Top 75% vs. bottom 25%</a>
+        -   <a href="#rvallds" id="toc-rvallds">4.2.5 Robust vs. other (with
+            downsampling over endangerment categories)</a>
+        -   <a
+            href="#426-top-25-vs-bottom-75-with-downsampling-over-endangerment-categories"
+            id="toc-426-top-25-vs-bottom-75-with-downsampling-over-endangerment-categories">4.2.6
+            Top 25% vs. bottom 75% (with downsampling over endangerment
+            categories)</a>
+        -   <a
+            href="#427-top-50-vs-bottom-50-with-downsampling-over-endangerment-categories"
+            id="toc-427-top-50-vs-bottom-50-with-downsampling-over-endangerment-categories">4.2.7
+            Top 50% vs. bottom 50% (with downsampling over endangerment
+            categories)</a>
+        -   <a
+            href="#428-top-75-vs-bottom-25-with-downsampling-over-endangerment-categories"
+            id="toc-428-top-75-vs-bottom-25-with-downsampling-over-endangerment-categories">4.2.8
+            Top 75% vs. bottom 25% (with downsampling over endangerment
+            categories)</a>
+        -   <a href="#rvallds_norisk" id="toc-rvallds_norisk">4.2.9 Robust vs. other
+            (with downsampling over endangerment categories; no “at-risk”
+            languages)</a>
+        -   <a
+            href="#4210-top-25-vs-bottom-75-with-downsampling-over-endangerment-categories-no-at-risk-languages"
+            id="toc-4210-top-25-vs-bottom-75-with-downsampling-over-endangerment-categories-no-at-risk-languages">4.2.10
+            Top 25% vs. bottom 75% (with downsampling over endangerment categories;
+            no “at-risk” languages)</a>
+        -   <a
+            href="#4211-top-50-vs-bottom-50-with-downsampling-over-endangerment-categories-no-at-risk-languages"
+            id="toc-4211-top-50-vs-bottom-50-with-downsampling-over-endangerment-categories-no-at-risk-languages">4.2.11
+            Top 50% vs. bottom 50% (with downsampling over endangerment categories;
+            no “at-risk” languages)</a>
+        -   <a
+            href="#4212-top-75-vs-bottom-25-with-downsampling-over-endangerment-categories-no-at-risk-languages"
+            id="toc-4212-top-75-vs-bottom-25-with-downsampling-over-endangerment-categories-no-at-risk-languages">4.2.12
+            Top 75% vs. bottom 25% (with downsampling over endangerment categories;
+            no “at-risk” languages)</a>
+        -   <a href="#4213-interim-discussion"
+            id="toc-4213-interim-discussion">4.2.13 Interim discussion</a>
+        -   <a href="#classXclass" id="toc-classXclass">4.2.14 Population-tiered
+            walk through sample</a>
+-   <a href="#5-general-discussion" id="toc-5-general-discussion">5. General
+    Discussion</a>
+-   <a href="#6-references" id="toc-6-references">6. References</a>
+
+# 1. Introduction
+
+The supplemental analyses presented below explore several factors that
+might impact the results reported in the main text. The following
+questions are addressed:
+
+1.  Is the statistical information encoded in PHOIBLE compatible with
+    randomly constructed sets of inventories? ([Section 2](#randbase))
+
+-   If so, we can assume that the particularities of PHOIBLE (which we
+    take to reflect the particularities of human phonological systems)
+    are in fact irrelevant to discovering a pattern consistent with
+    Herdan-Heaps’ law.
+
+2.  Do the results reported in the main text hold when we train and
+    evaluate the Herdan-Heaps’ models on different subsets of the data?
+    ([Section 3](#overfit))
+
+-   If so, then we can assume that the findings reported in the main
+    text are robust (not the result of overfitting), and that PHOIBLE
+    shows a high degree of internal statistical/distributional
+    consistency.
+
+3.  Do general differences in the phonological inventories of languages
+    spoken by (very) large and (very) small populations pose a confound
+    for estimating the Herdan-Heaps’ curve? ([Section 4](#popmodels))
+
+-   If so, then (a) prediction accuracy from the high/low population
+    group to the other should decrease relative to models that ignore
+    population, and (b) subgroups could differ in whether or not
+    Herdan-Heaps is a good fit. Such findings would undermine the
+    representativeness of the results reported in the main text.
+
+------------------------------------------------------------------------
+
+# 2. Question 1: Random baselines and ablation of confounding information
+
+We propose four interrelated algorithms designed to random baselines for
+PHOIBLE. These baselines are generated by ablating different sources of
+information through structured randomization and resampling. The two
+sources of information considered here are *inventory size* and *the
+frequency distribution of phoneme types*.
+
+By removing different kinds of information, we test their contribution
+to the observed fit of Herdan-Heaps’ law to PHOIBLE. If the random
+samples behave differently from PHOIBLE, then the corresponding
+(ablated) sources of information can be interpreted as relevant
+contributors to the Herdan-Heaps’ fit.
+
+We proceed as follows:
+
+1.  In [Section 2.1](#info), we describe two sources of information that
+    may confound our interpretation of the findings reported in the main
+    text.
+
+2.  In [Section 2.2](#data), we load, process, and explore the PHOIBLE
+    data.
+
+3.  In [Section 2.3](#alg1), we remove information about the
+    **distribution of phoneme inventory sizes** while keeping
+    information about the relative frequency of sounds.
+
+4.  In [Section 2.4](#alg2), we do the opposite: remove information
+    about the **relative frequency of sounds** while keeping information
+    about the distribution of inventory sizes.
+
+5.  In [Section 2.5](#alg3), we **ablate both sources of information**:
+    neither inventory size nor relative frequency of sounds is allowed
+    to contribute.
+
+6.  In [Section 2.6](#alg4), we **allow both sources of information**
+    during the construction of random inventories.
+
+7.  In [Section 2.7](#disc1), we discuss the results of the
+    randomization and ablation studies.
+
+8.  In [Section 2.8](#conc1), we offer preliminary conclusions about the
+    internal statistical consistency of PHOIBLE.
+
+Note that all of these randomization techniques remove the internal
+structure of inventories (for example, regularities in the co-occurrence
+of certain sounds, how vowels are balanced against consonants, etc.)
+
+## 2.1 Information used to construct random baselines
+
+## 2.1.1 Consonant inventory size
+
+Consonant inventory size is known to correlate with appearance of
+rare/novel phonemes. That is, most languages share a stock of very
+common consonants. Growing beyond that set requires selection from
+increasingly less common sounds. Thus, knowledge of the inventory size
+of a language is to some extent knowledge of how many new sounds that
+language will contribute to a cumulative sample, even when many
+languages have already been observed. In the extreme case, the observed
+Herdan-Heaps’-like pattern could derive from the distribution of
+inventory sizes.
+
+We can also consider this inventory size in relation to the original
+application of Herdan-Heaps’ law to lexical discovery in documents.
+Generally, Herdan-Heaps’ law depends only on the frequencies of the
+measured units (usually words, or in our case, phonemes). Steps through
+the document are made uniformly (e.g., one word at a time). In the
+present study, however, we step through the full document (PHOIBLE) one
+inventory at a time. The purpose: to mirror the real-life process of
+accruing data through phonological documentation and discovery. Because
+of this methodological change, we test to what extent our treating full
+inventories as steps might support the observed Herdan-Heaps’-like
+pattern of PHOIBLE.
+
+## 2.1.2 Relative cross-linguistic phoneme frequency
+
+Another source of information contained in PHOIBLE is the relative
+frequency of each sound across languages. As mentioned above, this
+information should be critical as it underlies the link between types
+and tokens – the same relationship that is explicitly encoded in
+Herdan-Heaps’ law (as well as Zipf’s law), with the embellishment of two
+free parameters.
+
+# 2.2 Preliminaries
+
+Read in PHOIBLE and extract some basic information to be used in the
+randomization procedures.
+
+``` r
+# Read in PHOIBLE
+phoible_long <- read_csv("./phoible.csv", 
+                    col_types = c(InventoryID = "i", 
+                                  Marginal = "l", 
+                                  .default = "c")) %>%
+  
+          # Select a random inventory per language 
+          rand.inv() %>%
+          # Extract only the necessary columns
+          select(InventoryID, Phoneme, ISO6393)
+
+# Randomize
+set.seed(0)
+invs = unique(phoible_long$InventoryID) %>% sample()
+phoible_long = phoible_long %>% arrange(match(InventoryID, invs))
+```
+
+## 2.2.1 Find the inventory sizes in PHOIBLE
+
+``` r
+inv_sizes = phoible_long %>%
+            group_by(InventoryID) %>%
+            summarize(inv_size = n()) %>%
+            pull(inv_size)
+```
+
+## 2.2.2 Plot the shape of the inventory size distributions
+
+``` r
+ggplot(as.data.frame(inv_sizes), aes(x=inv_sizes)) +
+  geom_density(alpha=0.5, fill="dodgerblue") +
+  theme_bw() +
+  xlab("Inventory size")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+## 2.2.3 Plot the log-log rank/frequency relationship
+
+``` r
+freqs <- sort(table(inv_sizes), decreasing=T)
+names(freqs) <- 1:length(freqs)
+freq.df = as.data.frame(freqs)
+colnames(freq.df)[1] <- "Rank"
+freq.df$`Rank (log)` <- log(as.numeric(freq.df$Rank))
+freq.df$`Freq (log)` <- log(as.numeric(freq.df$Freq))
+
+ggplot(freq.df, aes(x=`Rank (log)`, y=`Freq (log)`)) +
+  geom_line() +
+  theme_bw()
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+This plot shows the log-transformed frequency rank (1 = most frequent;
+x-axis) vs. the log-transformed frequency (y-axis) of each inventory
+size in PHOIBLE. The plot suggests that inventory sizes are not
+Zipf-distributed. Instead, most languages have very similar sizes.
+
+## 2.2.4 Extract the set of phonemes.
+
+``` r
+phon_typs <- unique(phoible_long$Phoneme)
+```
+
+## 2.2.5 Extract the number of distinct inventories.
+
+``` r
+pho.inv.num <- length(unique(phoible_long$InventoryID))
+```
+
+## 2.2.6 Processing PHOIBLE
+
+### 2.2.6.1 Cumulative counts
+
+``` r
+pho.counts <- get_cumulative_segment_counts_df(phoible_long %>% mutate(Iteration=1))
+```
+
+### 2.2.6.2 Model the PHOIBLE frequencies
+
+``` r
+m.pho.1 = lm(log(results) ~ log(InventoryID), pho.counts)
+```
+
+Generate model predictions
+
+``` r
+pho.1.preds = heaps.preds(pho.counts, m.pho.1)
+```
+
+### 2.2.6.3 Plot the results
+
+``` r
+plot.emp.vs.pred(pho.counts, pho.1.preds, pho.counts) + guides(color="none")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+Cumulative type count is given on the y-axis. The x-axis gives the order
+of addition of inventories. The dotted line represents the model fit;
+the blue line represents the empirical growth curve based on a randomly
+shuffled version of PHOIBLE.
+
+As in the analysis reported in the main text, the Herdan-Heaps’ model
+predicts the empirical values quite well.
+
+We now turn to the first of the randomization strategies.
+
+# 2.3 Algorithm 1: Remove inventory size information but retain relative frequencies
+
+-   For *n* desired databases,
+
+    -   For *k* desired inventories,
+
+        -   define inventory size *m* as the mode size in PHOIBLE
+
+        -   randomly select *m* phonemes without replacement from
+            PHOIBLE according to their crosslinguistic probabilities
+
+## 2.3.1 Generate 10 different versions of the random database using Alg. 1
+
+``` r
+alg.1.10 <- processing.iterator(phoible_long, 10, pho.inv.num, inv.inf = F, freq.inf=T)
+```
+
+Inspect the results
+
+``` r
+summary(alg.1.10)
+```
+
+    ##    Iteration     InventoryID      results    
+    ##  1      :2099   Min.   :   1   Min.   :  25  
+    ##  2      :2099   1st Qu.: 525   1st Qu.:1064  
+    ##  3      :2099   Median :1050   Median :1460  
+    ##  4      :2099   Mean   :1050   Mean   :1354  
+    ##  5      :2099   3rd Qu.:1575   3rd Qu.:1726  
+    ##  6      :2099   Max.   :2099   Max.   :1932  
+    ##  (Other):8396
+
+## 2.3.2 Compute the hypothetical Heaps’ estimates based on the constructed databases
+
+Create the Herdan-Heaps’ model object using the randomized data
+
+``` r
+m.alg.1 = lmer(log(results) ~ log(InventoryID) + (1|Iteration), alg.1.10)
+```
+
+Use the model to make predictions
+
+``` r
+alg.1.10.preds = heaps.preds(alg.1.10, m.alg.1)
+```
+
+## 2.3.3 Graphing
+
+“Empirical” vs. modeled estimates (how good a fit is Heaps’?)
+
+``` r
+plot.emp.vs.pred(alg.1.10, alg.1.10.preds, pho.counts) + guides(color="none")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+The order of addition of inventories is given on the x-axis. The
+estimated number of total unique segment types is given on the y-axis.
+The dotted black line corresponds to the regression curve from the
+Herdan-Heaps’ model. Smooth colored lines correspond to the predictions
+of the model per random shuffling iteration. The blue jagged line gives
+the true growth curve for PHOIBLE.
+
+Removing information about the distribution of inventory size types does
+not have a strong impact on the quality of fit of the Herdan-Heaps’
+equation. However, both the model and the observed number of types in
+the random sample underestimate the true number of types.
+
+# 2.4 Algorithm 2: Preserve inventory size information but ablate relative phoneme frequency
+
+-   For *n* desired databases,
+
+    -   For *k* desired inventories,
+
+        -   randomly select an inventory size *m* according to its
+            crosslinguistic probability
+
+        -   randomly select *m* phonemes without replacement from the
+            set of sounds in PHOIBLE (uniform distribution)
+
+## 2.4.1 Generating 10 databases with the same number of inventories as PHOIBLE using Alg. 2
+
+``` r
+alg.2.10 = processing.iterator(phoible_long, 10, pho.inv.num, inv.inf = T, freq.inf = F)
+```
+
+Inspect the results
+
+``` r
+head(alg.2.10)
+```
+
+    ## # A tibble: 6 × 3
+    ## # Groups:   Iteration [1]
+    ##   Iteration InventoryID results
+    ##   <fct>           <int>   <int>
+    ## 1 1                   1      59
+    ## 2 1                   2      90
+    ## 3 1                   3     119
+    ## 4 1                   4     137
+    ## 5 1                   5     164
+    ## 6 1                   6     196
+
+## 2.4.2 Compute the hypothetical Heaps’ estimates based on the constructed databases
+
+Create the Herdan-Heaps’ model object using the randomized data
+
+``` r
+m.alg.2 = lmer(log(results) ~ log(InventoryID) + (1|Iteration), alg.2.10)
+```
+
+Use the model to make predictions
+
+``` r
+alg.2.10.preds = heaps.preds(alg.2.10, m.alg.2)
+```
+
+## 2.4.3 Graphing
+
+``` r
+plot.emp.vs.pred(alg.2.10, alg.2.10.preds, pho.counts)  + guides(color="none")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+
+Plotting conventions are the same as those reported in [Section
+2.3.3](#phoplot).
+
+Removing information about relative frequency (by sampling according to
+a uniform distribution across segments) drastically changes the shape of
+the growth curve. In other words, when all sounds are equally easy to
+find, we need many fewer languages to converge on the true number of
+segments. Notably, Herdan-Heaps’ is a poor fit for the randomized data.
+Thus, as expected, the relative frequencies of sounds in PHOIBLE
+contribute heavily to the Herdan-Heapsian growth pattern reported in the
+main text.
+
+# 2.5 Algorithm 3: Ablate both inventory size and relative frequency
+
+-   For *n* desired databases,
+
+    -   For *k* desired inventories,
+
+        -   define inventory size *m* as the mode size in PHOIBLE
+
+        -   randomly select *m* phonemes without replacement from the
+            set of sounds in PHOIBLE (uniform distribution)
+
+## 2.5.1 Generating 10 databases with the same number of inventories as PHOIBLE using Alg. 2
+
+``` r
+alg.3.10 = processing.iterator(phoible_long, 10, pho.inv.num, inv.inf = F, freq.inf = F)
+```
+
+Inspect the results
+
+``` r
+head(alg.3.10)
+```
+
+    ## # A tibble: 6 × 3
+    ## # Groups:   Iteration [1]
+    ##   Iteration InventoryID results
+    ##   <fct>           <int>   <int>
+    ## 1 1                   1      25
+    ## 2 1                   2      50
+    ## 3 1                   3      73
+    ## 4 1                   4      97
+    ## 5 1                   5     122
+    ## 6 1                   6     147
+
+## 2.5.2 Compute the hypothetical Heaps’ estimates based on the constructed databases
+
+Create the Herdan-Heaps’ model object using the randomized data
+
+``` r
+m.alg.3 = lmer(log(results) ~ log(InventoryID) + (1|Iteration), alg.3.10)
+```
+
+Use the model to make predictions
+
+``` r
+alg.3.10.preds = heaps.preds(alg.3.10, m.alg.3)
+```
+
+## 2.5.3 Graphing
+
+``` r
+plot.emp.vs.pred(alg.3.10, alg.3.10.preds, pho.counts) + guides(color="none")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+
+Plotting conventions are the same as those reported in [Section
+2.3.3](#phoplot).
+
+Neither preserving (Algorithm 2) nor removing (Algorithm 3) information
+about inventory sizes alters the effect of removing relative
+frequencies.
+
+# 2.6 Algorithm 4: Preserving both inventory size and relative frequency
+
+This algorithm preserves information about the frequency distributions
+of individual phonemes and inventory sizes as encoded in PHOIBLE. In
+other words, it aims to create a “random pseudo-clone” of the true
+database.
+
+-   For *n* desired databases,
+
+    -   For *k* desired inventories,
+
+        -   randomly select an inventory size *m* according to its
+            crosslinguistic probability
+
+        -   randomly select *m* phonemes without replacement from
+            PHOIBLE according to their crosslinguistic probabilities
+
+## 2.6.1 Generating 10 databases with the same number of inventories as PHOIBLE using Alg. 2
+
+``` r
+alg.4.10 = processing.iterator(phoible_long, 10, pho.inv.num, inv.inf = T, freq.inf = T)
+```
+
+Inspect the results
+
+``` r
+head(alg.4.10)
+```
+
+    ## # A tibble: 6 × 3
+    ## # Groups:   Iteration [1]
+    ##   Iteration InventoryID results
+    ##   <fct>           <int>   <int>
+    ## 1 1                   1      43
+    ## 2 1                   2      70
+    ## 3 1                   3      81
+    ## 4 1                   4      93
+    ## 5 1                   5     103
+    ## 6 1                   6     110
+
+## 2.6.2 Compute the hypothetical Heaps’ estimates based on the constructed databases
+
+Create the Herdan-Heaps’ model object using the randomized data
+
+``` r
+m.alg.4 = lmer(log(results) ~ log(InventoryID) + (1|Iteration), alg.4.10)
+```
+
+Use the model to make predictions
+
+``` r
+alg.4.10.preds = heaps.preds(alg.4.10, m.alg.4)
+```
+
+## 2.6.3 Graphing
+
+``` r
+plot.emp.vs.pred(alg.4.10, alg.4.10.preds, pho.counts) + guides(color="none")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+
+Plotting conventions are the same as those reported in [Section
+2.3.3](#phoplot).
+
+As with Algorithm 1, preserving information about relative frequencies
+leads to a much closer fit between the random databases, the
+expectations based on Herdan-Heaps’ law, and the true database. Notably,
+in contrast to Algorithm 1, the random estimates show a much smaller
+underestimation bias. Thus, adding information about inventory sizes
+**does** improve estimates when relative frequencies are preserved, but
+not when the latter information is ablated.
+
+## 2.6.4 Increasing the number of languages per iteration
+
+The main text presents several extrapolation analyses. Here, we generate
+random data approximately consistent with the number of known living
+languages using Algorithm 4 (our statistical “pseudo-clone” of PHOIBLE).
+We then apply the model trained on \~2000 languages to the expanded
+random database.
+
+7K languages per iteration
+
+``` r
+alg.4.7000 <- processing.iterator(phoible_long, 10, 7000, inv.inf = T, freq.inf = T)
+```
+
+Use the model to make predictions
+
+``` r
+alg.4.7000.preds = heaps.preds(alg.4.7000, m.alg.4)
+```
+
+Graphing
+
+``` r
+plot.emp.vs.pred(alg.4.7000, alg.4.7000.preds, pho.counts) + guides(color="none")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+
+Plotting conventions are the same as those reported in [Section
+2.3.3](#phoplot).
+
+Extrapolating the number of languages in the random sample to somewhere
+near the number of known, living languages, we see a continued decrease
+in the slope of the randomly generated values relative to both the model
+predictions and true PHOIBLE data.
+
+# 2.7 Discussion
+
+We established several random versions of the PHOIBLE database.
+Randomization was based around two sources of information: inventory
+size distributions and relative frequency distributions.
+
+Results showed that removing relative frequency information warped the
+type count growth curve most dramatically, leading to near immediate
+convergence on the true type with no correspondence to the expectations
+of Herdan-Heaps’ law.
+
+Inventory size distributions were not particularly relevant, though
+including this information supported a closer approximation to the true
+growth curve when information of relative segment frequencies was
+preserved. Despite this improvement, the random data tend towards
+underestimation relative to both the model expectations and the true
+behavior of PHOIBLE (as sample size increases).
+
+There are certainly other sources of information that could be explored
+along similar lines. For example, consonants are roughly twice as
+frequent as vowels in PHOIBLE, with tones making up only two percent
+overall. Relative frequency distributions within and across these
+classes, along with standards for the combination of classes within
+single inventories, could influence how easy it is to discover rare
+sounds. We leave these questions to future research.
+
+# 2.8 Conclusion
+
+We successfully removed the correlation between Herdan-Heaps’ law and
+the data in PHOIBLE. There appears to be something critical about the
+statistical properties of PHOIBLE that suggests infinite growth in sound
+types.
+
+Inclusion of more and more refined, nested approaches to random sampling
+could yield increasingly better fits. However, we stress that including
+more and more information from the source dataset should generally be
+expected to yield closer approximations. The real question is how these
+sources of information interact to yield the statistical properties of
+PHOIBLE.
+
+# 3. Question 2: Testing for overfitting
+
+In this section, we address a potential concern related to overfitting.
+By training and testing model parameters on the same dataset, we risk
+overfitting. In this case, overfitting can be interpreted as an
+artificially tight overlap between Herdan-Heaps’ predictions and the
+training data. Perhaps HH models based on different subsets of languages
+in the total sample are more or less predictive of other subsets.
+
+We address this concern in two ways:
+
+1.  Train an HH model on 75% of PHOIBLE and compare its predictions to
+    the remaining 25%
+
+-   Iterate the train/test cycle over different groups of testing and
+    training languages, randomly sampled
+
+2.  Compare the behavior of subgroups of languages defined by their
+    population (encoded as endangerment levels)
+
+-   Look at within-group patterns of growth and compare to HH
+    expectations
+
+-   Predict the behavior of more endangered languages using a model
+    trained on less endangered languages
+
+## 3.1 Modeling and prediction
+
+Using 10-fold cross-validation with 75% training on 25% testing data
+from PHOIBLE.
+
+``` r
+x.pred.df = cross.pred(phoible_long, 10)
+```
+
+## 3.2 Plotting predicted values against empirical values
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=x.pred.df)
+
+cross.pred.plot(x.pred.df, mod, title = "Cross-validation of Herdan-Heaps' estimates in PHOIBLE\n75% training, 25% testing")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
+
+The x-axis gives the empirical (observed) values within the test set.
+The y-axis gives the predictions of the model based on the training set.
+The regression curve of predicted vs. empirical is given in black. The
+95% confidence interval of that regression is indicated by dotted lines
+and blue shading. Observed relations are given in light grey (grouped by
+iteration). The hypothetical identity relation between empirical and
+predicted values is plotted in red.
+
+![\beta](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cbeta "\beta")
+refers to the coefficient relating Empirical to Predicted values.
+![p](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;p "p")
+refers to the significance level of the relation.
+
+## 3.3 Plotting predicted values per inventory
+
+``` r
+cross.pred.plot(x.pred.df, plot.typ="heaps.pred", title = "Predicted values per inventory vs. empirical values") + 
+  # Add a line for true PHOIBLE counts based on the entire database
+  geom_line(data=pho.1.preds %>% filter(InventoryID <= 755), aes(x=InventoryID, y = results), color="red", lwd=2) +
+  xlim(0, max(x.pred.df$InventoryID))
+```
+
+    ## Warning: Removed 230 row(s) containing missing values (geom_path).
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+
+The x-axis shows the order of accumulation of inventories. The y-axis
+shows the predicted/empirical type count. Predicted values are given in
+solid lines (colors reflect different iterations). Empirical values are
+given in dashed lines. The thick red line indicates predictions from the
+full-PHOIBLE model.
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=x.pred.df)
+
+cross.pred.plot(x.pred.df, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for the test data") 
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
+
+The x-axis gives the order of accumulation of inventories within the
+test set. The y-axis gives the predicted type counts based on the test
+set alone. The Herdan-Heaps’ curve is given in black. The 95% confidence
+interval of that curve is indicated by dotted lines and blue shading.
+Observed relations are given in light grey (grouped by iteration).
+
+# 3.4 Discussion
+
+Considering all inventories in PHOIBLE, cross-prediction from 75% to 25%
+of the sample using Herdan-Heaps’ models yields results consistent with
+those reported in the main text. Predictions of the model and empirical
+values correspond at a rate of .97 (near-identity).
+
+Therefore, (a) PHOIBLE exhibits a high degree of internal statistical
+consistency, and (b) the results of the analysis reported in the main
+text are not due to overfitting by training and testing on the same
+data.
+
+# 4. Q3: Population-based sampling
+
+Population size can be treated as a proxy for difficulty of access
+and/or documentability. In other words, the smaller the population, the
+more difficult it is to find and document the language. Hence, languages
+with fewer speakers should be accrued later in the documentary history
+of linguistics rather than earlier (on average).
+
+Moreover, languages with fewer speakers may behave differently from
+languages with many speakers. Perhaps cumulative growth models based
+primarily on more populous languages are not good fits for less populous
+languages.
+
+We address these issues by analyzing a subset of the PHOIBLE languages
+for which we have numerical and categorical measures of population size.
+
+## 4.1 Measuring population size
+
+We measure population size using two sources. For smaller languages, we
+use the language endangerment labels and population estimates from the
+Endangered Language Project (ELP; Catalog of Endangered Languages,
+2024). For large languages, we use the estimates from Ethnologue
+(Ethnologue: Languages of the world, 2023) as provided freely through
+Wikipedia (accessed 30. Jun, 2024).
+
+### 4.1.1 ELP data
+
+First, import the ELP data.
+
+``` r
+eth.dat = read.table("./elp_dat.txt", sep="\t", header=T, na.strings=c("","NA")) 
+```
+
+Some clean-up and simplification of endangerment status labels and
+population size estimates
+
+``` r
+# Simplify the labels for endangerment status in ELP
+simp.label = gsub("^At .+", "at_risk", eth.dat$Status)
+simp.label = gsub("^C.+", "critically_endangered", simp.label)
+simp.label = gsub("^D.+", "dormant", simp.label)
+simp.label = gsub("^Aw.+", "awakening", simp.label)
+simp.label = gsub("^E.+", "endangered", simp.label)
+simp.label = gsub("^S.+", "severely_endangered", simp.label)
+simp.label = gsub("^T.+", "threatened", simp.label)
+simp.label = gsub("^V.+", "vulnerable", simp.label)
+
+# Factorize the new, simplified labels
+eth.dat$simp.status = as.factor(simp.label)
+
+# Remove non-numeric characters
+eth.dat$Pop.Size.Clean = as.numeric(gsub("[^0-9\\-]+", "", eth.dat$Pop.Size))
+```
+
+    ## Warning: NAs introduced by coercion
+
+``` r
+# Remove unnecessary info
+eth.dat = eth.dat %>%
+          select(ISO6393, Pop.Size.Clean, simp.status) %>%
+          filter(Pop.Size.Clean > 0)
+
+# Save the cleaned version
+write.table(file="./elp_iso_pop.txt", eth.dat, sep="\t", quote=F, row.names=F)
+```
+
+### 4.1.2 Ethnologue/Wiki data
+
+Load Ethonologue (via Wiki) data
+
+``` r
+wiki.pops = read.table("./ethnologue_wiki_dat.txt", sep="\t", header=T) %>%
+  select(ISO6393, Pop.Size.Clean) %>%
+  mutate(simp.status = "robust") %>%
+  filter(!is.na(ISO6393))
+```
+
+### 4.1.3 Finalize the population table
+
+Join ELP and Ethnologue counts
+
+``` r
+pop.dat = bind_rows(eth.dat, wiki.pops)
+```
+
+Merge the population data with PHOIBLE
+
+``` r
+phoible_with_pop = phoible_long %>%
+                   left_join(., pop.dat, by="ISO6393") %>%
+                   filter(!is.na(Pop.Size.Clean)) %>% 
+                   mutate(simp.status = reorder(simp.status, Pop.Size.Clean, mean))
+
+# New sample size (number of inventories)
+length(unique(phoible_with_pop$ISO6393))
+```
+
+    ## [1] 832
+
+Find a reasonable split point (here, second quartile)
+
+``` r
+quantile(phoible_with_pop$Pop.Size.Clean, na.rm=T)
+```
+
+    ##        0%       25%       50%       75%      100% 
+    ## 1.000e+00 3.000e+02 3.500e+03 2.300e+04 1.138e+09
+
+### 4.1.4 Exploratory plotting of population sizes
+
+Explore the distribution of populations across status (in the log space)
+
+``` r
+ggplot(phoible_with_pop %>% filter(!is.na(simp.status)) %>% select(simp.status, Pop.Size.Clean, InventoryID) %>% distinct(), aes(x = simp.status, y = log(Pop.Size.Clean), fill = simp.status)) +
+  geom_violin() + 
+  theme_bw() +
+  ylab("Population (log)") +
+  theme(axis.text.x = element_text(angle=45, vjust = 1, hjust =1)) + 
+  guides(fill = "none")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-46-1.png)<!-- -->
+
+The ELP data present a clear log-linear increase in means, with some
+overlap in the actual populations per category. The Ethnologue data fall
+a little above expectation, but more or less adhere to the log-linear
+trend found in the ELP data. These data thus represent a fairly
+consistent step-wise increase in populations.
+
+Next, we turn to the relative frequencies of each status class.
+
+``` r
+ggplot(phoible_with_pop %>% filter(!is.na(simp.status)) %>% select(simp.status, Pop.Size.Clean, InventoryID) %>% distinct(), aes(x=simp.status, fill=simp.status)) +
+  geom_bar() +
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle=45, vjust = 1, hjust=1)) + 
+  guides(fill = "none")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-47-1.png)<!-- -->
+
+The population categories have very different frequencies. However, the
+distribution of frequencies resembles the Gaussian, with a strong peak
+in number of observations around the central category (“threatened”),
+attended by decreasing tails in either direction (increasing:
+“vulnerable” \> “at risk”
+![\approx](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Capprox "\approx")
+“robust”; decreasing: “endangered” \> “severely endangered”)
+populations. The most prominent deviation from this pattern is the
+category reserved for the smallest populations, “critically endangered,”
+which stands as the third-most frequent in terms of number of languages
+while sitting at the lower extreme of the population distribution.
+
+In terms of cross-prediction tasks (e.g., predicting from “robust” to
+all other categories), this lack of balance could create artificially
+poor fits.
+
+## 4.2 Modeling
+
+We model the data several ways:
+
+-   predicting from ‘robust’ to other languages ([Section
+    4.2.1](#rvall))
+
+-   predicting from languages from top 25% of population sizes to other
+    languages ([Section 4.2.2](#25v75)
+
+-   predicting from languages from the top 50% of population sizes to
+    other languages ([Section 4.2.3](#50v50))
+
+-   predicting from languages from the top 75% of population sizes to
+    other languages ([Section 4.2.4](#75v25))
+
+-   repeating the above analyses, but downsampling all endangerment
+    categories to include only as many languages as the smallest
+    category ([Sections 4.2.5](#rvallds) - 4.2.8)
+
+-   repeating the downsampled analysis, but removing the smallest
+    category (“at_risk”) to increase overall sample size per category
+    (Sections [4.2.9](#rvallds_norisk) - 4.2.12)
+
+-   walking through the selection process in a tiered manner (class by
+    class according to descending population size), using random
+    ordering within class ([Section 4.2.14](#classXclass))
+
+    -   the goal is to mimic the hypothetical trend that languages
+        spoken by fewer people will be encountered later than languages
+        spoken by more people
+
+------------------------------------------------------------------------
+
+All remaining analyses follow the same basic structure:
+
+-   Train a model on a subsection of the data
+
+-   Use the model to predict growth curves for the remaining data
+
+-   Iterate this process 10 times with random ordering within group
+
+-   Statistically analyze the goodness-of-fit of the model to the
+    held-out data
+
+-   Visualize the results
+
+Summaries of the results are given at the end of each subsection
+
+### 4.2.1 Category- and population-based cross-prediction
+
+#### 4.2.1.1 Robust vs. other lanugages
+
+-   Training data are taken from the “robust” category.
+
+-   Test data are taken from the remaining endangerment categories.
+
+------------------------------------------------------------------------
+
+``` r
+rob.df = pop.cross.pred(phoible_with_pop, 10, "robust")
+```
+
+Explore performance of cross-prediction models
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=rob.df)
+
+cross.pred.plot(rob.df, mod, title="Predicting from 'robust' to less populous languages\nEmpirical vs. Predicted")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-49-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(rob.df, plot.typ="heaps.pred", title = "Predicting from 'robust' to less populous languages\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-50-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=rob.df)
+
+cross.pred.plot(rob.df, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for non-'robust' languages")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-51-1.png)<!-- -->
+
+#### 4.2.1.2 Top 25% vs. bottom 75%
+
+-   Training data are taken from the top 25% most populous languages.
+
+-   Test data are taken from the remaining 75% of languages.
+
+------------------------------------------------------------------------
+
+``` r
+top.25.df = pop.cross.pred(phoible_with_pop, 10, pop.cut=4)
+```
+
+Explore performance of cross-prediction models
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=top.25.df)
+
+cross.pred.plot(top.25.df, mod, title = "Predicting from the 25% most populous to the 75% least populous\nEmpirical vs. predicted values")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-53-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(top.25.df, plot.typ="heaps.pred", title="Predicting from the 25% most populous to the 75% least populous languages\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-54-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=top.25.df)
+
+cross.pred.plot(top.25.df, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for the 75% least populous languages")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-55-1.png)<!-- -->
+
+### 4.2.1.3 Top 50% vs. bottom 50%
+
+-   Training data are taken from the top 50% most populous languages.
+
+-   Test data are taken from the remaining 50% of languages.
+
+------------------------------------------------------------------------
+
+``` r
+top.50.df = pop.cross.pred(phoible_with_pop, 10, pop.cut=3)
+```
+
+Explore performance of cross-prediction models
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=top.50.df)
+
+cross.pred.plot(top.50.df, mod, title = "Predicting from 50% most populous to 50% least populous languages\nEmpirical vs. predicted values")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-57-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(top.50.df, plot.typ="heaps.pred", title="Predicting from 50% most populous to 50% least populous languages\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-58-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=top.50.df)
+
+cross.pred.plot(top.50.df, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for 75% least populous languages")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-59-1.png)<!-- -->
+
+### 4.2.1.4 Top 75% vs. bottom 25%
+
+-   Training data are taken from the top 75% most populous languages.
+
+-   Test data are taken from the remaining 25% of languages.
+
+------------------------------------------------------------------------
+
+``` r
+top.75.df = pop.cross.pred(phoible_with_pop, 10, pop.cut=3)
+```
+
+Explore performance of cross-prediction models
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=top.75.df)
+
+cross.pred.plot(top.75.df, mod, title = "Predicting from the 75% most populous to the 25% least populous languages\nEmpirical vs. predicted values")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-61-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(top.75.df, plot.typ="heaps.pred", title="Predicting from the 75% most populous to the 25% least populous languages\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-62-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=top.75.df)
+
+cross.pred.plot(top.75.df, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for the 25% least populous languages")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-63-1.png)<!-- -->
+
+#### 4.2.1.5 Interim Discussion
+
+Less populous languages indeed behave differently from more populous
+languages, no matter how we slice the dataset. Models trained on more
+populous languages tend to overpredict the growth rate segment types in
+of less populous languages.
+
+However, when we investigate the internal behavior of the less populous
+language samples, we find uniformly good fits for Herdan-Heaps’ law. The
+major difference between the more and less populous language samples is
+therefore not whether one follows the expectations of Herdan-Heaps’ law
+and the other doesn’t, but rather that they share adherence to the law,
+albeit with different parameter settings.
+
+### 4.2.5 Robust vs. other (with downsampling over endangerment categories)
+
+The population categories in our sample are not equally frequent, and
+the mean populations per category are distributed in a
+(quasi-)log-linear fashion. These qualities could result in artificially
+(i.e., sample-dependent) poor fits when predicting between groups.
+
+To address this point, we repeat the analyses above, this time
+down-sampling each endangerment category to have only as many languages
+as the smallest category in the sample.
+
+The analyses reported in this and the following sections have the same
+structure as those reported in [Sections 4.2.1](#rvall) - 4.2.4.
+
+------------------------------------------------------------------------
+
+-   Training data are taken from the “robust” category (downsampled)
+
+-   Test data are taken from the remaining endangerment categories
+    (downsampled)
+
+------------------------------------------------------------------------
+
+``` r
+rob.down.df = pop.cross.pred(phoible_with_pop, 10, "robust", down.sample = T)
+```
+
+Explore performance of cross-prediction models
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=rob.down.df)
+
+cross.pred.plot(rob.down.df, mod, title="Predicting from 'robust' to less populous languages (downsampled)\nEmpirical vs. Predicted")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-65-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(rob.down.df, plot.typ="heaps.pred", title = "Predicting from 'robust' to less populous languages (downsampled)\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-66-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=rob.down.df)
+
+cross.pred.plot(rob.down.df, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for non-'robust' languages (downsampled)")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-67-1.png)<!-- -->
+
+### 4.2.6 Top 25% vs. bottom 75% (with downsampling over endangerment categories)
+
+-   Training data are taken from the top 25% most populous languages
+    (downsampled)
+
+-   Test data are taken from the remaining 75% of languages
+    (downsampled)
+
+------------------------------------------------------------------------
+
+``` r
+top.25.down.df = pop.cross.pred(phoible_with_pop, 10, pop.cut=4, down.sample = T)
+```
+
+Explore performance of cross-prediction models
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=top.25.down.df)
+
+cross.pred.plot(top.25.down.df, mod, title="Predicting from the 25% most populous to the 75% least populous languages (downsampled)\nEmpirical vs. Predicted")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-69-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(top.25.down.df, plot.typ="heaps.pred", title = "Predicting from the 25% most populous to the 75% least populous languages (downsampled)\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-70-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=top.25.down.df)
+
+cross.pred.plot(top.25.down.df, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for the 75% least populous languages (downsampled)")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-71-1.png)<!-- -->
+
+### 4.2.7 Top 50% vs. bottom 50% (with downsampling over endangerment categories)
+
+-   Training data are taken from the top 50% most populous languages
+    (downsampled)
+
+-   Test data are taken from the remaining 50% of languages
+    (downsampled)
+
+------------------------------------------------------------------------
+
+``` r
+top.50.down.df = pop.cross.pred(phoible_with_pop, 10, pop.cut=3, down.sample=T)
+```
+
+Explore performance of cross-prediction models
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=top.50.down.df)
+
+cross.pred.plot(top.50.down.df, mod, title="Predicting from the 50% most populous to the 50% least populous languages (downsampled)\nEmpirical vs. Predicted")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-73-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(top.50.down.df, plot.typ="heaps.pred", title = "Predicting from the 50% most populous to the 50% least populous languages (downsampled)\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-74-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=top.50.down.df)
+
+cross.pred.plot(top.50.down.df, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for the 50% least populous languages (downsampled)")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-75-1.png)<!-- -->
+
+### 4.2.8 Top 75% vs. bottom 25% (with downsampling over endangerment categories)
+
+-   Training data are taken from the top 75% most populous languages
+    (downsampled)
+
+-   Test data are taken from the remaining 25% of languages
+    (downsampled)
+
+------------------------------------------------------------------------
+
+``` r
+top.75.down.df = pop.cross.pred(phoible_with_pop, 10, pop.cut=2, down.sample = T)
+```
+
+Explore performance of cross-prediction models
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=top.75.down.df)
+
+cross.pred.plot(top.75.down.df, mod, title="Predicting from the 75% most populous to the 25% least populous languages (downsampled)\nEmpirical vs. Predicted")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-77-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(top.75.down.df, plot.typ="heaps.pred", title = "Predicting from the 75% most populous to the 25% least populous languages (downsampled)\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-78-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=top.75.down.df)
+
+cross.pred.plot(top.75.down.df, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for the 25% least populous languages (downsampled)")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-79-1.png)<!-- -->
+
+### 4.2.9 Robust vs. other (with downsampling over endangerment categories; no “at-risk” languages)
+
+We further trim the data by removing the smallest category (“at-risk”)
+languages. Downsampling is then applied based on the next smallest
+category (“robust”).
+
+------------------------------------------------------------------------
+
+-   Training data are taken from the “robust” category (downsampled, no
+    “at-risk” languages)
+
+-   Test data are taken from the remaining endangerment categories
+    (downsampled, no “at-risk” languages)
+
+------------------------------------------------------------------------
+
+``` r
+rob.down.nar.df = pop.cross.pred(phoible_with_pop %>% filter(simp.status != "at-risk"), 10, "robust", down.sample = T)
+```
+
+Explore performance of cross-prediction models
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=rob.down.nar.df)
+
+cross.pred.plot(rob.down.nar.df, mod, title="Predicting from 'robust' to less populous languages (downsampled; no 'at-risk')\nEmpirical vs. Predicted")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-81-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(rob.down.nar.df, plot.typ="heaps.pred", title = "Predicting from 'robust' to less populous languages (downsampled; no 'at-risk')\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-82-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=rob.down.nar.df)
+
+cross.pred.plot(rob.down.nar.df, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for non-'robust' languages (downsampled; no 'at-risk')")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-83-1.png)<!-- -->
+
+### 4.2.10 Top 25% vs. bottom 75% (with downsampling over endangerment categories; no “at-risk” languages)
+
+-   Training data are taken from the top 25% most populous languages
+    (downsampled, no “at-risk” languages)
+
+-   Test data are taken from the remaining 75% of languages
+    (downsampled, no “at-risk” languages)
+
+------------------------------------------------------------------------
+
+``` r
+top.25.down.nar.df = pop.cross.pred(phoible_with_pop %>% filter(simp.status != "at-risk"), 10, pop.cut=4, down.sample = T)
+```
+
+Explore performance of cross-prediction models
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=top.25.down.nar.df)
+
+cross.pred.plot(top.25.down.nar.df, mod, title="Predicting from the 25% most populous to the 75% least populous languages (downsampled; no 'at-risk')\nEmpirical vs. Predicted")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-85-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(top.25.down.nar.df, plot.typ="heaps.pred", title = "Predicting from the 25% most populous to the 75% least populous languages (downsampled; no 'at-risk')\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-86-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=top.25.down.nar.df)
+
+cross.pred.plot(top.25.down.nar.df, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for the 75% least populous languages (downsampled; no 'at-risk')")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-87-1.png)<!-- -->
+
+### 4.2.11 Top 50% vs. bottom 50% (with downsampling over endangerment categories; no “at-risk” languages)
+
+-   Training data are taken from the top 50% most populous languages
+    (downsampled, no “at-risk” languages)
+
+-   Test data are taken from the remaining 50% of languages
+    (downsampled, no “at-risk” languages)
+
+------------------------------------------------------------------------
+
+``` r
+top.50.down.nar.df = pop.cross.pred(phoible_with_pop %>% filter(simp.status != "at-risk"), 10, pop.cut=3, down.sample=T)
+```
+
+Explore performance of cross-prediction models
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=top.50.down.nar.df)
+
+cross.pred.plot(top.50.down.nar.df, mod, title="Predicting from the 50% most populous to the 50% least populous languages (downsampled; no 'at-risk')\nEmpirical vs. Predicted")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-89-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(top.50.down.nar.df, plot.typ="heaps.pred", title = "Predicting from the 50% most populous to the 50% least populous languages (downsampled; no 'at-risk')\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-90-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=top.50.down.nar.df)
+
+cross.pred.plot(top.50.down.nar.df, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for the 50% least populous languages (downsampled; no 'at-risk')")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-91-1.png)<!-- -->
+
+### 4.2.12 Top 75% vs. bottom 25% (with downsampling over endangerment categories; no “at-risk” languages)
+
+-   Training data are taken from the top 75% most populous languages
+    (downsampled, no “at-risk” languages)
+
+-   Test data are taken from the remaining 25% of languages
+    (downsampled, no “at-risk” languages)
+
+------------------------------------------------------------------------
+
+``` r
+top.75.down.nar.df = pop.cross.pred(phoible_with_pop %>% filter(simp.status != "at-risk"), 10, pop.cut=2, down.sample = T)
+```
+
+Explore performance of cross-prediction models
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=top.75.down.nar.df)
+
+cross.pred.plot(top.75.down.nar.df, mod, title="Predicting from the 75% most populous to the 25% least populous languages (downsampled; no 'at-risk')\nEmpirical vs. Predicted")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-93-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(top.75.down.nar.df, plot.typ="heaps.pred", title = "Predicting from the 75% most populous to the 25% least populous languages (downsampled; no 'at-risk')\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-94-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=top.75.down.nar.df)
+
+cross.pred.plot(top.75.down.nar.df, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for the 25% least populous languages (downsampled; no 'at-risk')")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-95-1.png)<!-- -->
+
+### 4.2.13 Interim discussion
+
+Down-sampling to level out differences in the number of observations per
+population class had little effect on the over-estimation bias (still in
+the range of 1.5 times) in the population-based cross-prediction models.
+Removing the smallest class from consideration also had little effect.
+
+The nternal behavior of the less populous language samples remains
+consistent with Herdan-Heaps’.
+
+### 4.2.14 Population-tiered walk through sample
+
+To mirror the progression from larger to smaller languages that (in
+aggregate) characterizes the history of documentation, we use three
+approaches based on categories:
+
+------------------------------------------------------------------------
+
+**Approach 1**:
+
+-   randomize languages within population status categories
+
+-   order the randomized groups from largest to smallest population
+    categories
+
+-   compute the cumulative frequencies and model them
+
+<br><br>
+
+**Approach 2**:
+
+-   randomly sample 75% of languages from each population status
+    category and combine these data
+
+-   train a Herdan-Heaps’ model on this sample
+
+-   predict the behavior of the remaining 25% of languages
+
+<br><br>
+
+**Approach 3**:
+
+-   Sample a diminishing proportion
+    (![prop = \frac{1}{rank}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;prop%20%3D%20%5Cfrac%7B1%7D%7Brank%7D "prop = \frac{1}{rank}"))
+    from each category – sorted from largest to smallest population
+
+-   train a Herdan-Heaps’ model on this sample
+
+-   predict the behavior of the remaining languages
+
+#### 4.2.14.1 Category-based walk
+
+Walk through the full database, one population status category at a time
+
+------------------------------------------------------------------------
+
+``` r
+cat.walk.df = cat.walk(phoible_with_pop, 10)
+```
+
+Explore performance of the full model (no cross-prediction)
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=cat.walk.df)
+
+cross.pred.plot(cat.walk.df, mod, title="Accumulating languages by population status (large to small)\nEmpirical vs. Predicted")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-97-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(cat.walk.df, plot.typ="heaps.pred", title = "Accumulating languages by population status (large to small)\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-98-1.png)<!-- -->
+
+#### 4.2.14.2 Random sampling within population groups (75% train, 25% test)
+
+-   Sampling with 75/25 cross-prediction and category walk
+
+------------------------------------------------------------------------
+
+``` r
+cat.walk.rand.75 = cross.pred.cat(phoible_with_pop, 10, .75)
+```
+
+Explore performance of the model
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=cat.walk.rand.75)
+
+cross.pred.plot(cat.walk.rand.75, mod, title="Accumulating languages by population status (large to small) with cross-prediction\nEmpirical vs. Predicted")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-100-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(cat.walk.rand.75, plot.typ="heaps.pred", title = "Predicting from 75% to 25% of data (within categories)\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-101-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=cat.walk.rand.75)
+
+cross.pred.plot(cat.walk.rand.75, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for the 25% remaining languages")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-102-1.png)<!-- -->
+
+#### 4.2.14.3 Random sampling within population groups, diminishing proportion for training per group
+
+-   Sampling
+    ![\frac{1}{rank}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cfrac%7B1%7D%7Brank%7D "\frac{1}{rank}")
+    languages per category with cross-prediction and category walk
+
+------------------------------------------------------------------------
+
+``` r
+cat.walk.dim = cross.pred.cat.dim(phoible_with_pop, 10)
+```
+
+Explore performance of the model
+
+``` r
+mod = lmer(Predicted ~ Empirical + (1|Iteration), data=cat.walk.dim)
+
+cross.pred.plot(cat.walk.dim, mod, title="Diminishing training sample by population with cross-prediction\nEmpirical vs. Predicted")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-104-1.png)<!-- -->
+
+Plot the HH curves from training against the empirical curves
+
+``` r
+cross.pred.plot(cat.walk.dim, plot.typ="heaps.pred", title = "Diminishing training sample by population with cross-prediction\nEmpirical and predicted growth curves")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-105-1.png)<!-- -->
+
+Plot the HH fit within the test data
+
+``` r
+mod = lmer(log(Empirical) ~ log(InventoryID) + (1|Iteration), data=cat.walk.dim)
+
+cross.pred.plot(cat.walk.dim, mod, plot.typ="heaps.emp", title = "Herdan-Heaps' fit for the remaining languages")
+```
+
+![](phoible_randomization_v2_files/figure-gfm/unnamed-chunk-106-1.png)<!-- -->
+
+#### 4.2.14.4 Interim discussion
+
+When we allow for some degree of low-population languages from each
+class to be included in the training data, predictions on the test set
+are nearly perfect. Note that these models most closely approximate the
+true situation: documentation will always expand through inclusion or
+refinement of analyses from all (or most) population classes.
+
+Summing up: while population does play a confounding role in estimating
+model parameters, all population classes follow Herdan-Heaps’ law. The
+frequency distribution of languages across these classes has little
+impact on model estimates. Predicting only from higher to lower
+population languages results in poor fits with a tendency towards
+overestimation (\~1.5 - 2 times the empirical values). However,
+enriching the training data with information from all population
+classes, even when shrinking the proportion of smaller population
+classes relative to their ranks, yields nearly perfect predictions.
+
+# 5. General Discussion
+
+The analyses reported in the main text raise several questions.
+
+-   First, what sources of information contribute to the observed
+    Herdan-Heaps’-like behavior of PHOIBLE, and can these be measured
+    against random baselines?
+
+-   Second, because the models reported in the main text train and test
+    on the same dataset, they may suffer from overfitting (i.e.,
+    modeling sample-specific noise). Do the same results hold when
+    training and testing on non-overlapping subsets of the data?
+
+-   Third, languages with very few speakers are hypothesized to differ
+    systematically from languages with very many speakers. Moreover,
+    languages with many speakers are presumably more likely to be
+    documented earlier by linguists. Do differences in population within
+    the languages of PHOIBLE produce different statistical patterns of
+    behavior? Do any such differences hold under different sampling
+    conditions?
+
+Regarding the first point, we found that the frequency distribution of
+segments across languages in PHOIBLE was critical for shaping the
+Herdan-Heaps-like trend. The distribution of inventory sizes had
+virtually no effect on its own, though it did interact with the presence
+of segment-frequency information. These findings support the idea that
+the distribution of segments in PHOIBLE carries non-trivial (i.e.,
+non-randomly-generated) information.
+
+Regarding the second point, we found that models trained on a random 75%
+training set predict the behavior of the remaining 25% of languages with
+high accuracy. Overfitting is therefore unlikely to be a significant
+problem for the models reported in the main text.
+
+Regarding the third point, we found that population size does impact the
+distribution of segment types: languages with larger populations behave
+differently as a group than languages with smaller populations. However,
+we also found that all groups follow Herdan-Heaps’ law internally.
+Therefore, the difference in behavior of the groups is one of degree
+rather than kind – a difference in parameter settings, all leading to
+non-asymptotic growth.
+
+Taken together, these findings (a) support the internal statistical
+consistency of PHOIBLE, (b) eliminate concern about overfitting, (c)
+illuminate some of the factors that contribute to the observed growth
+curve, and (d) expose some consistency underlying the surface-level
+variation among population classes. All of these results strengthen the
+arguments made in the main text.
+
+# 6. References
+
+Catalogue of Endangered Languages. (2024). University of Hawaii at
+Manoa. <http://www.endangeredlanguages.com>
+
+Ethnologue: Languages of the world. (2023). Dallas, Texas: SIL
+International,
